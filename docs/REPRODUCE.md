@@ -111,7 +111,7 @@ python scripts/evaluate.py --gpu 0
 | `image` | MAE, PSNR, SSIM in the body mask | MAE, PSNR, SSIM |
 | `SEG` | TotalSegmentator Dice between sCT and CT segmentations | Dice |
 | `PERCEPTUAL` | calibrated SAM distance between sCT and CT; IMPACT distance between sCT and its source image | SAM, Reg |
-| `Uncertainty` | mean variance of the 15 predictions | Uncertainty |
+| `Uncertainty` | mean variance of the 15 predictions in the body mask | Uncertainty |
 
 Output: `results/generated/Evaluations/`, one `Metric_TRAIN.json` per branch and
 region, with the same tree as the paper's metrics in `results/raw/Evaluations/`.

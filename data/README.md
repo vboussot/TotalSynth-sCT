@@ -7,7 +7,7 @@ read from `data/processed/synthrad{year}/Task_{task}/{region}/{patient}` and
 
 `splits/` holds, for each task, the held-out list of the dedicated model
 (`Validation.txt`), that of the unified model (`Validation_unified.txt`) and
-the quick-check list (`Check.txt`). `task_1/MultimodalHC.txt` lists the Multimodal-HC
+the quick-check list (`Check.txt`). `task_1/MultimodalHC.txt` lists the MTBD
 subjects of Table 6.
 
 The layout and the preparation are detailed in `docs/DATA.md`.

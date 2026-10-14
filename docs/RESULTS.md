@@ -2,7 +2,7 @@
 
 | Path | Content |
 |---|---|
-| `tables/table_NN_*.tex` | the 6 tables of the paper, written from `paper/arxiv_v1.tex` by `scripts/tables/published_tables.py` |
+| `tables/table_NN_*.tex` | the 6 tables of the paper, written from `paper/manuscript.tex` by `scripts/tables/published_tables.py` |
 | `results/raw/Evaluations/` | 102 `Metric_TRAIN.json` files: one per model branch and region, with the value of every metric for every patient |
 | `tables/from_metrics/` | Tables 2 to 6 built from those files by `scripts/tables/` |
 
@@ -13,9 +13,9 @@ The tree is `Task_{t}/{MODEL}/CV{KIND}/{REGION}/Metric_TRAIN.json`:
 | Element | Values |
 |---|---|
 | `Task_{t}` | source modality: `Task_1` for MRI, `Task_2` for CBCT |
-| `MODEL` | `Dedicated`, `Unified`, or `Finetune` for the model fine-tuned on Multimodal-HC |
+| `MODEL` | `Dedicated`, `Unified`, or `Finetune` for the model fine-tuned on MTBD |
 | `KIND` | empty for MAE, PSNR and SSIM; `_SEG` for the Dice; `_PERCEPTUAL` for SAM and Reg; `_Uncertainty` |
-| `REGION` | `AB`, `HN`, `TH`, `brain`, `pelvis`; `CSIRO` (Task 1); `MultimodalHC_in` and `MultimodalHC_out` for the in-phase and out-of-phase images |
+| `REGION` | `AB`, `HN`, `TH`, `brain`, `pelvis`; `CSIRO` (Task 1); `MultimodalHC_in` and `MultimodalHC_out` for the in-phase and out-of-phase images of MTBD |
 
 A run of `scripts/evaluate.py` writes the same tree under
 `results/generated/Evaluations/`.

@@ -1,11 +1,10 @@
 # Manuscript source
 
-`arxiv_v1.tex` and `arxiv_v1.bbl` are the source files of
-[arXiv:2609.13838](https://arxiv.org/abs/2609.13838);
-`scripts/tables/published_tables.py` writes the 6 tables from them.
+`manuscript.tex` and `manuscript.bbl` are the source of the current version of the
+paper ([arXiv:2609.13838](https://arxiv.org/abs/2609.13838));
+`scripts/tables/published_tables.py` writes the 6 tables from it.
 
-`arxiv_source_manifest.json` is arXiv's source-processing metadata.
-`SHA256SUMS` records hashes for the manuscript and the three figures. Run it from the repository root with:
+`SHA256SUMS` records hashes for the manuscript and its figures. Run it from the repository root with:
 
 ```bash
 sha256sum --check paper/SHA256SUMS

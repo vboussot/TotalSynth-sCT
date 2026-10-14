@@ -1,14 +1,14 @@
 # TotalSynth-sCT
 
 Code, configurations and patient-level results of **“TotalSynth: Robust
-Whole-Body Synthetic CT from MRI and CBCT”**
+Whole-Body Synthetic CT from MRI and CBCT images”**
 ([arXiv:2609.13838](https://arxiv.org/abs/2609.13838)).
 
 The paper releases three five-fold model families for synthetic CT generation:
 a dedicated MRI-to-CT model (Task 1), a dedicated CBCT-to-CT model (Task 2) and
 a unified model that accepts both modalities. It evaluates them on held-out
 SynthRAD2023 and SynthRAD2025 cases and on an external MRI/CT set, then on
-Multimodal-HC whole-body MRI before and after fine-tuning.
+MTBD whole-body MRI before and after fine-tuning.
 
 ## What you can do
 
@@ -104,8 +104,8 @@ Besides SynthRAD, the paper uses two external sets
 
 - **CSIRO** (Task 1): 24 expert-aligned T2 MRI/CT cases, to request from their
   authors; RegistrationBias-sCT prepares them.
-- **Multimodal-HC** (Table 6; “BIC-MAC” in `tables/`): whole-body
-  Dixon MRI/CT of healthy volunteers, distributed by its authors. Table 6 is built from the patient-level metrics
+- **MTBD**, the Multimodal Total-Body Dynamic dataset (Table 6): whole-body
+  Dixon MRI/CT of healthy volunteers, distributed by its authors as `DEPICT-RH/Multimodal-HC`. Table 6 is built from the patient-level metrics
   of the paper.
 
 ## Citation

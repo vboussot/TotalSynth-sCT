@@ -1,6 +1,6 @@
 \begin{table}[!t]
 \centering
-\caption{Summary of datasets used in this study after eligibility screening and registration quality control. MRI = magnetic resonance imaging; CT = computed tomography; CBCT = cone-beam CT; OoD = out-of-distribution.}
+\caption{Summary of datasets used in this study after eligibility screening and registration quality control.Registered MRI and CBCT images were used as model inputs, while the corresponding planning CT images served as references for training and evaluation. MRI = magnetic resonance imaging; CT = computed tomography; CBCT = cone-beam CT; MTBD = Multimodal Total-Body Dynamic dataset; OoD = out-of-distribution.}
 \label{tab:datasets}
 \small
 \tablesetup
@@ -9,9 +9,9 @@
 \toprule
 \tableheadershade Dataset & Modality pair & Region & Source cases & Retained cases & Excluded cases & Use \\
 \midrule
-SynthRAD2023 & MRI+CBCT & Brain, Pelvis & 720 & 618 & 102 & Training/evaluation \\
-SynthRAD2025 & MRI+CBCT & Head \& Neck, Thorax, Abdomen & 1080 & 832 & 248 & Training/evaluation \\
-BIC-MAC & MRI(Dixon)/CT & Whole-body & 75 & 60 & 15 & Fine-tuning/OoD \\
+SynthRAD2023 & MRI/CT, CBCT/CT & Brain, Pelvis & 720 & 618 & 102 & Training/evaluation \\
+SynthRAD2025 & MRI/CT, CBCT/CT & Head \& Neck, Thorax, Abdomen & 1080 & 832 & 248 & Training/evaluation \\
+MTBD & MRI(Dixon)/CT & Whole-body & 100 & 60 & 40 & Fine-tuning/OoD \\
 D1 & MRI/CT & Prostate & 24 & 24 & 0 & Training/evaluation \\
 D2 & MRI/CT & Prostate & 18 & 18 & 0 & Training/evaluation \\
 GoldAtlas (D3) & MRI/CT & Prostate & 19 & 17 & 2 & Training/evaluation \\

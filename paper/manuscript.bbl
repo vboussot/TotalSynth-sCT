@@ -1,12 +1,34 @@
 \begin{thebibliography}{10}
 
-\bibitem{bahloul2024advancements}
-Mohamed~A Bahloul, Saima Jabeen, Sara Benoumhani, Habib~Abdulmohsen Alsaleh,
-  Zehor Belkhatir, and Areej Al-Wabil.
-\newblock Advancements in synthetic ct generation from mri: A review of
-  techniques, and trends in radiation therapy planning.
-\newblock {\em Journal of Applied Clinical Medical Physics}, 25(11):e14499,
-  2024.
+\bibitem{keall2022integrated}
+Paul~J Keall, Caterina Brighi, Carri Glide-Hurst, Gary Liney, Paul~ZY Liu,
+  Suzanne Lydiard, Chiara Paganelli, Trang Pham, Shanshan Shan, Alison~C Tree,
+  et~al.
+\newblock Integrated mri-guided radiotherapy—opportunities and challenges.
+\newblock {\em Nature Reviews Clinical Oncology}, 19(7):458--470, 2022.
+
+\bibitem{jaffray2012image}
+David~A Jaffray.
+\newblock Image-guided radiotherapy: from current concept to future
+  perspectives.
+\newblock {\em Nature reviews Clinical oncology}, 9(12):688--699, 2012.
+
+\bibitem{edmund2017review}
+Jens~M Edmund and Tufve Nyholm.
+\newblock A review of substitute ct generation for mri-only radiation therapy.
+\newblock {\em Radiation Oncology}, 12(1):28, 2017.
+
+\bibitem{giacometti2020review}
+Valentina Giacometti, Alan~R Hounsell, and Conor~K McGarry.
+\newblock A review of dose calculation approaches with cone beam ct in photon
+  and proton therapy.
+\newblock {\em Physica Medica}, 76:243--276, 2020.
+
+\bibitem{spadea2021deep}
+Maria~Francesca Spadea, Matteo Maspero, Paolo Zaffino, and Joao Seco.
+\newblock Deep learning based synthetic-ct generation in radiotherapy and pet:
+  a review.
+\newblock {\em Medical physics}, 48(11):6537--6566, 2021.
 
 \bibitem{boulanger2021deep}
 M.~Boulanger, J.-C. Nunes, H.~Chourak, A.~Largent, S.~Tahri, O.~Acosta, et~al.
@@ -14,23 +36,14 @@ M.~Boulanger, J.-C. Nunes, H.~Chourak, A.~Largent, S.~Tahri, O.~Acosta, et~al.
   radiotherapy: A literature review.
 \newblock {\em Physica Medica}, 89:265--281, 2021.
 
-\bibitem{liu2023review}
-Hefei Liu, David Schaal, Heather Curry, Ryan Clark, Anthony Magliari, Patrick
-  Kupelian, Deepak Khuntia, and Sushil Beriwal.
-\newblock Review of cone beam computed tomography based online adaptive
-  radiotherapy: current trend and future direction.
-\newblock {\em Radiation Oncology}, 18(1):144, 2023.
-
-\bibitem{edmund2017review}
-Jens~M Edmund and Tufve Nyholm.
-\newblock A review of substitute ct generation for mri-only radiation therapy.
-\newblock {\em Radiation Oncology}, 12(1):28, 2017.
-
-\bibitem{spadea2021deep}
-Maria~Francesca Spadea, Matteo Maspero, Paolo Zaffino, and Joao Seco.
-\newblock Deep learning based synthetic-ct generation in radiotherapy and pet:
-  a review.
-\newblock {\em Medical physics}, 48(11):6537--6566, 2021.
+\bibitem{olin2021robustness}
+Anders~B Olin, Christopher Thomas, Adam~E Hansen, Jacob~H Rasmussen, Georgios
+  Krokos, Teresa~Guerrero Urbano, Andriana Michaelidou, Bj{\"o}rn Jakoby,
+  Claes~N Ladefoged, Anne~K Berthelsen, et~al.
+\newblock Robustness and generalizability of deep learning synthetic computed
+  tomography for positron emission tomography/magnetic resonance imaging--based
+  radiation therapy planning of patients with head and neck cancer.
+\newblock {\em Advances in radiation oncology}, 6(6), 2021.
 
 \bibitem{huijben2024generating}
 Evi~MC Huijben, Maarten~L Terpstra, Suraj Pai, Adrian Thummerer, Peter
@@ -90,11 +103,13 @@ Jason~A Dowling, Jidi Sun, Peter Pichler, David Rivest-H{\'e}nault, Soumya
 \newblock {\em International Journal of Radiation Oncology* Biology* Physics},
   93(5):1144--1153, 2015.
 
-\bibitem{hinge2026bicmac}
-Christian Hinge, Claes~N{\o}hr Ladefoged, Flemming~Littrup Andersen, Georg
-  Schramm, Kirsten Korsholm, and Ian Law.
-\newblock {BIC-MAC}: Big cross-modal attenuation correction challenge, 2026.
-\newblock MICCAI 2026 Challenge. Zenodo, doi:10.5281/zenodo.19731819.
+\bibitem{hinge2026multimodal}
+Christian Hinge, Frederikke~E H{\o}i-Hansen, Rasmus~H Hansen, Kirsten Korsholm,
+  Helle~H Johannesen, Elisabeth Albrecht-Beste, Eunice~S Saxtoft, Vibeke
+  Jensen, Christina Schulze, Christina Mikkelsen, et~al.
+\newblock A multimodal total-body dynamic [18f] fdg pet/ct/mri dataset of 100
+  healthy humans.
+\newblock {\em Scientific Data}, 2026.
 
 \bibitem{boussot2025impact}
 Valentin Boussot, C{\'e}dric H{\'e}mon, Jean-Claude Nunes, Jason Dowling, Simon
@@ -129,11 +144,12 @@ Andrey Fedorov, Reinhard Beichel, Jayashree Kalpathy-Cramer, et~al.
   network.
 \newblock {\em Magnetic Resonance Imaging}, 30(9):1323--1341, 2012.
 
-\bibitem{yu2022external}
-Alice~C Yu, Bahram Mohajer, and John Eng.
-\newblock External validation of deep learning algorithms for radiologic
-  diagnosis: a systematic review.
-\newblock {\em Radiology: Artificial Intelligence}, 4(3):e210064, 2022.
+\bibitem{boussot2026misalignment}
+Valentin Boussot, Cedric Hemon, Caroline Lafond, Jean-Claude Nunes, and
+  Jean-Louis Dillenseger.
+\newblock When misalignment becomes supervision: Structured label noise in
+  supervised synthetic ct generation.
+\newblock {\em arXiv preprint arXiv:2609.29387}, 2026.
 
 \bibitem{guan2021domain}
 Hao Guan and Mingxia Liu.
@@ -148,6 +164,12 @@ Brian Guo, Darui Lu, Gregory Szumel, Rongze Gui, Pengyu Li, Tingyu Wang,
   medical imaging: an experimental study.
 \newblock {\em International Journal of Computer Assisted Radiology and
   Surgery}, pages 1--11, 2026.
+
+\bibitem{yu2022external}
+Alice~C Yu, Bahram Mohajer, and John Eng.
+\newblock External validation of deep learning algorithms for radiologic
+  diagnosis: a systematic review.
+\newblock {\em Radiology: Artificial Intelligence}, 4(3):e210064, 2022.
 
 \bibitem{boussot2025konfai}
 Valentin Boussot and Jean-Louis Dillenseger.

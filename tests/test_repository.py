@@ -75,13 +75,11 @@ def test_script_tables_match_the_paper() -> None:
         assert len(rows[0]) == len(rows[1]), number
         compared = 0
         for reported_row, built_row in zip(*rows):
-            for column, (reported, built) in enumerate(zip(reported_row.split("&"), built_row.split("&"))):
+            for reported, built in zip(reported_row.split("&"), built_row.split("&")):
                 for mine, theirs in zip(MSTD.findall(built), MSTD.findall(reported)):
                     for value, reference in zip(mine, theirs):
-                        step = 10 ** -len(reference.split(".")[1])
-                        # Table 3's uncertainty agrees within 0.2 %
-                        tolerance = abs(float(reference)) * 2e-3 if (number, column) == (3, 7) else step * 1.001
-                        assert abs(float(value) - float(reference)) <= tolerance, (number, reported_row.split("&")[0])
+                        step = 10 ** -len(reference.partition(".")[2])
+                        assert abs(float(value) - float(reference)) <= step * 1.001, (number, reported_row.split("&")[0])
                     compared += 1
         assert compared >= {2: 18, 3: 28, 4: 36, 5: 91, 6: 42}[number], number
 

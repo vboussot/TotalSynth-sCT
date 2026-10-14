@@ -19,7 +19,7 @@ authors:
 version: 0.1.0
 preferred-citation:
   type: article
-  title: "TotalSynth: Robust Whole-Body Synthetic CT from MRI and CBCT"
+  title: "TotalSynth: Robust Whole-Body Synthetic CT from MRI and CBCT images"
   authors:
     - family-names: Boussot
       given-names: Valentin

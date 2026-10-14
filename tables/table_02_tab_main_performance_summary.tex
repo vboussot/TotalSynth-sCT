@@ -1,20 +1,20 @@
 \begin{table}[!t]
 \centering
-\caption{Overall performance of released TotalSynth models and BIC-MAC fine-tuning. MRI = magnetic resonance imaging; CT = computed tomography; CBCT = cone-beam CT; BIC-MAC = Big Cross-Modal Attenuation Correction; MAE = mean absolute error; HU = Hounsfield unit; SSIM = structural similarity index; PSNR = peak signal-to-noise ratio. Values report mean $\pm$ standard deviation. Detailed regional results are provided in the Appendix.}
+\caption{Overall performance of released TotalSynth models and MTBD fine-tuning. MRI = magnetic resonance imaging; CT = computed tomography; CBCT = cone-beam CT; MTBD = Multimodal Total-Body Dynamic dataset; MAE = mean absolute error; HU = Hounsfield unit; SSIM = structural similarity index; PSNR = peak signal-to-noise ratio; uncertainty = mean voxel-wise variance of the 15 ensemble predictions within the body mask. Values report mean $\pm$ standard deviation. Detailed regional results are provided in Supplemental Tables S1--S4.}
 \label{tab:main_performance_summary}
 \small
 \tablesetup
-\begin{tabular}{@{}llccc@{}}
+\begin{tabular}{@{}llcccc@{}}
 \toprule
 \tableheadershade
-Model and setting & Evaluation domain & MAE (HU) & SSIM & PSNR (dB) \\
+Model and setting & Evaluation domain & MAE (HU) & SSIM & PSNR (dB) & Uncertainty (HU$^2$) \\
 \midrule
-MRI-to-CT & Primary MRI/CT & \mstd{67.49}{15.97} & \mstd{0.920}{0.025} & \mstd{29.28}{2.10} \\
-CBCT-to-CT & Primary CBCT/CT & \mstd{53.55}{17.79} & \mstd{0.939}{0.026} & \mstd{32.09}{2.93} \\
-Unified model & MRI inputs & \mstd{67.68}{16.42} & \mstd{0.920}{0.025} & \mstd{29.22}{2.18} \\
-Unified model & CBCT inputs & \mstd{54.22}{17.54} & \mstd{0.938}{0.025} & \mstd{31.89}{2.87} \\
-MRI-to-CT, direct & BIC-MAC & \mstd{100.91}{18.67} & \mstd{0.968}{0.007} & \mstd{26.69}{1.40} \\
-MRI-to-CT, fine-tuned & BIC-MAC & \mstd{62.21}{6.19} & \mstd{0.982}{0.002} & \mstd{30.45}{0.92} \\
+MRI-to-CT & Primary MRI/CT & \mstd{67.5}{15.9} & \mstd{0.920}{0.025} & \mstd{29.3}{2.1} & \mstd{4726}{1961} \\
+CBCT-to-CT & Primary CBCT/CT & \mstd{53.6}{17.8} & \mstd{0.939}{0.026} & \mstd{32.1}{2.9} & \mstd{2241}{814} \\
+Unified model & MRI inputs & \mstd{67.7}{16.4} & \mstd{0.920}{0.025} & \mstd{29.2}{2.2} & \mstd{4319}{1709} \\
+Unified model & CBCT inputs & \mstd{54.2}{17.5} & \mstd{0.938}{0.025} & \mstd{31.9}{2.9} & \mstd{1812}{643} \\
+MRI-to-CT, direct & MTBD & \mstd{100.9}{18.7} & \mstd{0.968}{0.007} & \mstd{26.7}{1.4} & \mstd{17401}{7920} \\
+MRI-to-CT, fine-tuned & MTBD & \mstd{62.2}{6.2} & \mstd{0.982}{0.002} & \mstd{30.5}{0.9} & \mstd{3363}{639} \\
 \bottomrule
 \end{tabular}
 \end{table}

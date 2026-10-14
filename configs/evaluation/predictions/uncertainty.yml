@@ -1,19 +1,23 @@
-# Mean, over the volume, of the variance (HU^2) of the 15 predictions of an ensemble (Uncertainty.mha, written
-# by scripts/predict.py).
+# Mean, inside the body mask, of the variance (HU^2) of the 15 predictions of an ensemble (Uncertainty.mha,
+# written by scripts/predict.py).
 # Filled in by scripts/evaluate.py: prepared dataset, predictions folder, patient list and run name.
 Evaluator:
   metrics:
     Uncertainty:
       targets_criterions:
-        None:
+        None;MASK:
           criterions_loader:
-            Mean:
+            totalsynth.metrics:MaskedMean:
               name: Uncertainty
   Dataset:
     groups_src:
       Uncertainty:
         groups_dest:
           Uncertainty:
+            transforms: None
+      MASK:
+        groups_dest:
+          MASK:
             transforms: None
     subset: $subset
     dataset_filenames:

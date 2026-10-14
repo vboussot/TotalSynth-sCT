@@ -50,14 +50,14 @@ make pairs
 | `task_2/Validation.txt` | 150: the held-out cases of Task 2 (AB 32, HN 37, TH 34, brain 26, pelvis 21) |
 | `task_{1,2}/Validation_unified.txt` | 136 and 144: the held-out cases of the unified model, subsets of the above |
 | `task_{1,2}/Check.txt` | two cases per region, for `--check` |
-| `task_1/MultimodalHC.txt` | the 15 Multimodal-HC subjects of Table 6 |
+| `task_1/MultimodalHC.txt` | the 15 MTBD subjects of Table 6 |
 
 ## External data
 
 - **CSIRO:** 24 expert-aligned T2 MRI/CT cases (Dowling et al., CSIRO), to
   request from their authors. RegistrationBias-sCT prepares them under
   `external/Task_1/CSIRO` with its `prepare_external.py --ext-t2 DIR`.
-- **Multimodal-HC:** whole-body Dixon MRI/CT of healthy volunteers (Hinge et al.),
-  distributed by its authors. Each of the 15 held-out subjects is evaluated with
+- **MTBD** (Multimodal Total-Body Dynamic dataset): whole-body Dixon MRI/CT of healthy volunteers
+  (Hinge et al.), distributed by its authors as `DEPICT-RH/Multimodal-HC`. Each of the 15 held-out subjects is evaluated with
   its in-phase and its out-of-phase image; Table 6 is built from the
   patient-level metrics of the paper.

@@ -1,0 +1,431 @@
+\documentclass{article}
+
+
+\usepackage{PRIMEarxiv}
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{lipsum}
+\usepackage{fancyhdr}       % header
+\usepackage{graphicx}       % graphics
+\graphicspath{{media/}} 
+\usepackage{amssymb}
+\usepackage{colortbl}
+\usepackage[colorlinks=true, urlcolor=blue]{hyperref}
+\usepackage{lineno}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{xurl}
+
+
+\emergencystretch=2em
+\providecommand{\mstd}[2]{\ensuremath{#1\,\pm\,#2}}
+\definecolor{TableHeader}{HTML}{EEF3F8}
+\newcommand{\tableheadershade}{\rowcolor{TableHeader}}
+\newcommand{\tablesetup}{\setlength{\tabcolsep}{5pt}\renewcommand{\arraystretch}{1.12}}
+\newcommand{\metricstablesetup}{\setlength{\tabcolsep}{3pt}\renewcommand{\arraystretch}{1.12}}
+
+
+
+\pagestyle{fancy}
+\thispagestyle{empty}
+\rhead{ \textit{ }} 
+
+% Update your Headers here
+\fancyhead[LO]{TotalSynth: Robust Whole-Body Synthetic CT from MRI and CBCT images}
+
+%% Title
+\title{TotalSynth: Robust Whole-Body Synthetic CT from MRI and CBCT images}
+
+\author{
+    Valentin Boussot$^{1\dagger}$, C{\'e}dric H{\'e}mon$^{1\dagger}$, Anaïs Barateau$^{1}$, Caroline Lafond$^{1}$, Jean-Claude Nunes$^{1}$, Jean-Louis Dillenseger$^{1}$\\
+    $^1$ Univ. Rennes, CLCC Eug\`ene Marquis, INSERM, LTSI - UMR 1099\\
+    F-35000 Rennes, France\\
+    $^\dagger$ These authors contributed equally to this work.\\
+}
+
+\date{}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+\sloppy
+\textbf{Purpose:} To develop and evaluate TotalSynth, a reusable pretrained framework for whole-body synthetic CT (sCT) generation from MRI and cone-beam CT (CBCT) images. \\
+\textbf{Materials and Methods:} In this retrospective technical study, data were assembled between 2020 and 2026 from multiple publicly available MRI/CT and CBCT/CT datasets covering the brain, head and neck, thorax, abdomen, and pelvis, supplemented by four prostate MRI/CT cohorts and an external whole-body MRI/CT dataset. After registration quality control, 1450 of 1800 public challenge pairs were retained. The corpus also included 84 additional prostate MRI/CT and 60 external whole-body MRI/CT cases from the Multimodal Total-Body Dynamic dataset (MTBD). Three deep learning model families (MRI-to-CT, CBCT-to-CT, and unified MRI/CBCT-to-CT), each comprising five models, were evaluated using image-domain metrics (MAE, SSIM, PSNR), anatomy-aware and registration-based metrics, and uncertainty estimates.\\
+\textbf{Results:} The released MRI-to-CT model achieved an overall MAE of 67 HU, SSIM of 0.920, and PSNR of 29.3 dB. The CBCT-to-CT model achieved an overall MAE of 54 HU, SSIM of 0.939, and PSNR of 32.1 dB. The unified model maintained similar performance on MRI inputs (MAE, 68 HU) and CBCT inputs (MAE, 54 HU). On external MTBD data, MRI-to-CT MAE was 101 HU without fine-tuning and 62 HU after fine-tuning, and the mean voxel-wise uncertainty within the body decreased from 17401 HU$^2$ to 3363 HU$^2$. Inference with the full five-model ensemble took 23 seconds per case on a single consumer graphics processing unit (GPU).\\
+\textbf{Conclusion:} TotalSynth provides publicly available pretrained models and a 3D Slicer extension for MRI- and CBCT-based CT synthesis across multiple anatomical regions. External evaluation highlights the importance of local validation and optional fine-tuning under domain shift.
+\end{abstract}
+
+\section*{Summary Statement}
+TotalSynth provides reusable computed tomography synthesis models from magnetic resonance imaging and cone-beam computed tomography, with whole body coverage and improved external performance after fine-tuning.
+
+\section*{Key Points}
+\begin{itemize}
+    \item The training dataset combined public radiotherapy challenge data and additional prostate MRI/CT cohorts, while an independent whole-body MRI/CT dataset was used for external evaluation and fine-tuning.
+    \item Dedicated MRI-to-CT and cone-beam CT-to-CT models achieved overall mean absolute errors of 67.5 HU and 53.6 HU, respectively.
+    \item On external whole-body MRI data, fine-tuning reduced mean absolute error from 100.9 HU to 62.2 HU.
+\end{itemize}
+
+\section{Introduction}
+
+
+Computed tomography (CT) images provide tissue attenuation information expressed in Hounsfield units (HU). In radiotherapy, these values are used to estimate tissue density and calculate radiation dose distributions. Magnetic resonance imaging (MRI) and cone-beam CT (CBCT) can provide updated images of patient anatomy during treatment, enabling the assessment of anatomical changes and supporting adaptive radiotherapy \cite{keall2022integrated,jaffray2012image}. However, MRI does not directly provide the tissue density information required for dose calculation, while conventional CBCT often suffers from inaccurate HU values due to scatter and imaging artifacts. Consequently, accurate dose calculation on these images generally requires additional processing to obtain reliable HU \cite{edmund2017review,giacometti2020review}.
+
+Synthetic CT (sCT) generation addresses this limitation by estimating HU from MRI or CBCT. Deep learning has become the dominant paradigm for this task \cite{edmund2017review,spadea2021deep}. However, many published models remain tailored to specific anatomical regions, imaging modalities, or imaging systems \cite{boulanger2021deep,spadea2021deep}. This specialization limits their generalizability and broader clinical deployment, as scanner models, MRI sequences, CBCT acquisition protocols, fields of view, and anatomical regions can vary substantially across clinical settings \cite{olin2021robustness}.
+
+Recent international SynthRAD2023 and SynthRAD2025 challenges have improved access to paired MRI/CT and CBCT/CT data across multiple anatomical regions \cite{huijben2024generating,thummerer2025synthrad2025}. 
+However, broadly applicable, publicly available pretrained models for CT synthesis remain limited, in contrast to established general-purpose segmentation frameworks such as TotalSegmentator \cite{wasserthal2023totalsegmentator}. Such a resource should provide not only benchmark performance, but also curated supervision, released weights, external validation, and a practical deployment pathway.
+
+Inspired by this philosophy, we introduce TotalSynth, a family of pretrained models for whole-body CT synthesis from MRI, CBCT, or both modalities. The contribution is not new raw image acquisition, but the harmonization of existing paired datasets into registered supervision and the release of reusable model families. 
+
+The purpose of this study was to develop and evaluate TotalSynth, a publicly available deep learning framework for MRI- and CBCT-based synthetic CT generation across multiple anatomical regions. We investigated whether a unified model could achieve synthesis accuracy comparable to modality-specific models and whether pretrained models could be adapted to previously unseen imaging conditions through fine-tuning.
+
+\section{Materials and Methods}
+
+\subsection{Study design and datasets}
+
+This retrospective technical study used paired MRI/CT and CBCT/CT data from international radiotherapy challenges, complementary prostate MRI cohorts, and external whole-body MRI data (Table~\ref{tab:datasets}). Figure~\ref{fig:dataset_atlas} provides an overview of the dataset distribution across imaging modalities and anatomical regions.
+SynthRAD2023 provided brain and pelvic MRI-to-CT and CBCT-to-CT cases from three Dutch university medical centers \cite{thummerer2023synthrad2023,huijben2024generating}. SynthRAD2025 extended the corpus to head-and-neck, thoracic, and abdominal sites, with MRI/CT and CBCT/CT pairs collected across five European university hospitals \cite{thummerer2025synthrad2025,rogowski2026generating}. Together, these datasets contributed broad variability in terms of anatomy, scanner vendor, acquisition protocol, field of view, and image quality.
+
+The public challenge data were deliberately heterogeneous. SynthRAD2023 included brain and pelvic cases, with MRI contrasts covering T1-weighted gradient echo, inversion recovery, spoiled gradient echo, and T2-weighted sequences acquired at 1.5T and 3T. SynthRAD2025 further broadened the acquisition domain with head-and-neck, thoracic, and abdominal cases, including low-field MR-Linac (0.35 T), diagnostic MRI (1.5T and 3T), and CBCT acquisitions from multiple image-guided radiotherapy systems, with different acquisition parameters. This heterogeneity was central to the study design because the intended use of TotalSynth is cross-institutional reuse rather than optimization for a single scanner or anatomy.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=1\textwidth]{figures/fig_dataset_atlas.png}
+\caption{TotalSynth data coverage by source modality and anatomical region. MRI = magnetic resonance imaging; CT = computed tomography; CBCT = cone-beam CT; MTBD = Multimodal Total-Body Dynamic dataset. The bar chart summarizes registered SynthRAD2023/2025 cases counted from the public registration repositories, 60 MTBD whole-body MRI cases counted for each anatomical region, and 84 additional prostate MRI/CT cases. Representative aligned CT slices are shown with segmentation-mask overlays to illustrate anatomical coverage and registration-derived supervision.}
+\label{fig:dataset_atlas}
+\end{figure}
+
+
+Four additional prostate cohorts (D1--D4) enriched pelvic MRI-to-CT training with treatment-position CT and MRI, including conventional diagnostic MRI, GoldAtlas data \cite{nyholm2018mr}, and MRI-Linac acquisitions. Dataset D1 included 24 patients with 3D T2-weighted SPACE MRI \cite{dowling2015automatic}; D2 included 18 patients with T2-weighted MRI and bladder contrast at CT; D3 corresponded to 17 GoldAtlas patients; and D4 included 25 patients imaged on a 1.5T Unity (Elekta) MRI-Linac.
+
+The multimodal total-body dynamic dataset (MTBD) \cite{hinge2026multimodal} provided 100 paired whole-body Dixon MRI/CT cases from healthy volunteers, covering the vertex to mid-thigh. This dataset was reserved for external evaluation and fine-tuning to assess model generalizability under domain shift. Compared with the radiotherapy training datasets, MTBD differs in MRI contrast, CT acquisition protocol, subject population, and anatomical coverage. An additional external CSIRO MRI-to-CT subset was evaluated separately and included in the regional results.
+
+Of the 100 MTBD subjects, 45 were used for fine-tuning and 15 for independent evaluation, with no subject overlap. Each subject provided in-phase (IN) and out-of-phase (OUT) images reconstructed from the same Dixon MRI acquisition. Both contrasts were evaluated separately to assess the influence of MRI contrast on synthesis performance while minimizing anatomical variability between comparisons.
+
+\subsection{Case selection and quality control}
+
+The study dataset was assembled between 2020 and 2026. Public SynthRAD cases were included when both the source image and reference CT were available. Deformable registration was also required to align the source image anatomically with its CT. Cases were excluded due to insufficient registration quality, major anatomical discrepancies or field-of-view mismatches between the source image and original CT, or failure to visually validate the registered pair for training or evaluation. Registration quality was assessed using a combination of quantitative and qualitative evaluations. Anatomical alignment was quantified using Dice similarity coefficients between corresponding anatomical segmentations. In addition, visual inspection of multiple image overlays comparing the registered MRI or CBCT images with the CT was performed to assess anatomical correspondence and identify potential registration errors. Cases exhibiting poor anatomical alignment, implausible deformations, or substantial field-of-view mismatches were excluded.
+
+Based on the original challenge sizes, 618 of 720 SynthRAD2023 cases and 832 of 1080 SynthRAD2025 cases were retained after quality control; 350 patients were excluded. The four additional prostate cohorts contributed 84 MRI/CT cases after eligibility screening, and 60 MTBD cases were used for external evaluation and fine-tuning. No formal sample-size calculation was performed; all eligible cases were used. Age and sex were not consistently available across all public challenge datasets and were therefore not analyzed.
+
+
+\begin{table}[!t]
+\centering
+\caption{Summary of datasets used in this study after eligibility screening and registration quality control.Registered MRI and CBCT images were used as model inputs, while the corresponding planning CT images served as references for training and evaluation. MRI = magnetic resonance imaging; CT = computed tomography; CBCT = cone-beam CT; MTBD = Multimodal Total-Body Dynamic dataset; OoD = out-of-distribution.}
+\label{tab:datasets}
+\small
+\tablesetup
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}llllrrl@{}}
+\toprule
+\tableheadershade Dataset & Modality pair & Region & Source cases & Retained cases & Excluded cases & Use \\
+\midrule
+SynthRAD2023 & MRI/CT, CBCT/CT & Brain, Pelvis & 720 & 618 & 102 & Training/evaluation \\
+SynthRAD2025 & MRI/CT, CBCT/CT & Head \& Neck, Thorax, Abdomen & 1080 & 832 & 248 & Training/evaluation \\
+MTBD & MRI(Dixon)/CT & Whole-body & 100 & 60 & 40 & Fine-tuning/OoD \\
+D1 & MRI/CT & Prostate & 24 & 24 & 0 & Training/evaluation \\
+D2 & MRI/CT & Prostate & 18 & 18 & 0 & Training/evaluation \\
+GoldAtlas (D3) & MRI/CT & Prostate & 19 & 17 & 2 & Training/evaluation \\
+D4 & MRI/CT & Prostate & 25 & 25 & 0 & Training/evaluation \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\subsection{Registration of the training and evaluation pairs}
+
+For supervised training and evaluation, each source image was non-rigidly registered to its planning CT and resampled on the CT grid: MRI to CT for MRI-to-CT pairs and CBCT to CT for CBCT-to-CT pairs. The registered MRI or CBCT image served as the model input, while the planning CT, which was not deformed, served as the target image. Registration was part of dataset curation and was not required during released-model inference, where the sCT is produced on the grid of the input image. Consequently, the correspondence between input and target should be interpreted as a quality-controlled registration rather than a perfect anatomical ground truth, particularly in cases with organ motion, truncation, artifacts, or large inter-scan anatomical differences.
+
+Registrations were generated with the IMPACT framework \cite{boussot2025impact} using deformable multimodal registration informed by semantic anatomical features. Each deformation field was visually reviewed, and cases with implausible deformation, missing anatomy, severe field-of-view mismatch, or unresolved inter-scan anatomical change were excluded before training. This quality-control step was treated as part of the dataset annotation process. It also makes the supervision bias explicit: the model was optimized on accepted registered pairs, and residual registration error remains a measurable limitation of the training signal.
+
+
+\subsection{TotalSynth pipeline overview}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=1\textwidth]{Pipeline.png}
+\caption{Overview of the TotalSynth training and inference pipeline. MRI = magnetic resonance imaging; CT = computed tomography; CBCT = cone-beam CT. MRI or CBCT images are preprocessed and used as input to a 2.5D synthesis model that predicts a CT-like image. During training, the input images are spatially aligned to the reference CT images, which are used as supervised targets. During inference, predictions are generated using test-time augmentation and 5-fold model ensembling, then restored to the original image geometry.}
+\label{fig:pipeline}
+\end{figure}
+
+TotalSynth uses a common preprocessing, training, and inference framework for MRI and CBCT inputs. Three 5-fold pretrained model families are released: a dedicated MRI-to-CT model, a dedicated CBCT-to-CT model, and a unified MRI/CBCT-to-CT model that accepts both source modalities.
+
+The 5-fold design was used for two reasons. First, it allowed all training cases to contribute to model development while preserving held-out evaluation within each fold. Splits were defined at the patient or case level so that a registered source image and its CT target were never used simultaneously for training and held-out testing within a fold. Second, it enabled ensemble prediction at inference time, which improved stability across heterogeneous inputs and provided a simple uncertainty estimate from inter-model and test-time augmentation variability. All quantitative results reported for the primary evaluation were computed on a held-out set of cases that was not used to train any of the five ensemble members, and every member was applied to the same cases.
+
+
+\subsection{Preprocessing}
+
+Preprocessing used a body mask (CBCT or MRI) to restrict synthesis to the relevant anatomy, suppress background, and exclude regions of the CT outside the field of view of the registered source image. In the released inference pipeline, body masks are generated with the IMPACTSeg body model, resampled with the input image to 1 $\times$ 1 $\times$ 3 mm spacing, and dilated by five voxels to preserve the skin surface and nearby anatomy. CT targets were clipped to $[-1024, 3071]$ HU and rescaled to $[-1, 1]$. MRI and CBCT inputs were clipped between their minimum intensity and the $99.5^{\mathrm{th}}$ percentile, then rescaled to $[-1, 1]$ using image-specific intensity ranges. Images are processed as axial 512 $\times$ 512 patches with neighboring-slice context, and voxels outside the body mask are assigned air intensity in the final sCT.
+
+\subsection{2.5D synthesis model}
+
+TotalSynth employs a 2.5D deep learning architecture in which five consecutive axial slices are provided as input to predict the CT image corresponding to the central slice. This strategy incorporates spatial information from neighboring slices while maintaining the computational efficiency of two-dimensional processing. It provides a practical compromise between synthesis accuracy and computational cost. Results from the SynthRAD2025 challenge showed that 2.5D approaches achieved performance comparable to 3D architectures across several anatomical regions \cite{rogowski2026generating}. Furthermore, 2.5D model requires less GPU memory and computational resources than fully 3D approaches, facilitating deployment on conventional hardware.
+
+The generator is based on a U-Net++ architecture with a ResNet-34 encoder \cite{zhou1807nested,he2016deep}, comprising 26,084,881 trainable parameters. Its nested skip connections combine multiscale anatomical features with fine spatial details. Predictions are generated slice by slice and assembled into a complete three-dimensional synthetic CT volume.
+
+\subsection{Training of the released models}
+
+Three model families were trained using the same architecture and preprocessing pipeline. The dedicated MRI-to-CT and CBCT-to-CT models were trained on their respective datasets, whereas the unified model combined both modalities. Each family followed a five-fold training strategy with patient-level splitting to prevent data leakage. Training was performed on randomly extracted 320 × 320 axial patches, incorporating five consecutive slices, with random spatial flips for data augmentation.
+
+The training objective combined a voxel-wise reconstruction loss (L1) with a perceptual loss based on the Segment Anything Model \cite{ravi2025sam2} (SAM 2.1 Small) to encourage anatomical consistency. Optimization used AdamW with an initial learning rate of 0.001, a weight decay of 0.001, and a batch size of 32. The learning rate was reduced by a factor of 0.75 every 10 epochs, with training configured for 100 epochs.
+
+\subsection{Inference}
+
+At inference, the input image is preprocessed as during training, synthesized slice by slice by each fold, and combined with flipped test-time augmentations: each of the five models predicts the original image and two randomly flipped copies, giving 15 predictions per case. Predictions are averaged across augmentations and ensemble members, then restored to the original image geometry to produce an sCT aligned with the input MRI or CBCT image. Voxel-wise dispersion across ensemble members and test-time augmentations was retained as an uncertainty map, allowing high-variability regions to be inspected alongside the synthesized image.
+
+\subsection{Evaluation metrics}
+
+MAE, PSNR, SSIM, Dice, and uncertainty were computed within the body mask used for synthesis; SAM and Reg were computed on the whole image, where voxels of the sCT outside the body mask are set to air. Let $\hat{y}$ denote the sCT, $y$ the reference CT, and $x$ the registered source MRI or CBCT image. Image quality was first assessed using three complementary metrics: mean absolute error (MAE), peak signal-to-noise ratio (PSNR), and structural similarity index (SSIM). For PSNR and SSIM, the dynamic range was determined from each image pair rather than fixed a priori.
+
+To further assess anatomical consistency, the Dice similarity coefficient was calculated between anatomical segmentations obtained from the sCT and reference CT using TotalSegmentator \cite{wasserthal2023totalsegmentator}. Dice scores were averaged across the anatomical structures present in each case and subsequently across cases. Additionally, a perceptual distance was computed using intermediate features extracted from the frozen Segment Anything Model (SAM) 2.1 encoder \cite{ravi2025sam2}:
+
+\begin{equation}
+d_{\mathrm{SAM}}(\hat{y},y) = \sum_{l}\sum_{c} \alpha_{l,c}\bigl| \phi_{l,c}(\hat{y}) - \phi_{l,c}(y) \bigr|_1 ,
+\end{equation}
+
+where $\phi_{l,c}$ represents feature channel $c$ at intermediate level $l$, and $\alpha_{l,c}\geq0$ denotes channel weights calibrated to favor anatomical correspondence over voxel-wise intensity agreement. The metric was restricted to two intermediate feature levels, with weights calibrated so that a registration-deformed CT control remained closer to the reference CT than an sCT trained using voxel-wise supervision alone.
+
+Anatomical preservation relative to the input image was also evaluated using a registration-based metric (Reg) derived from the IMPACT framework \cite{boussot2025impact}. This metric compares features extracted from the sCT and the source MRI or CBCT using the frozen TotalSegmentator CT 3 mm encoder on $128^3$ patches. Unlike reference-based metrics, Reg assesses anatomical consistency between the synthesized image and its original input, helping identify potential geometric discrepancies introduced during synthesis. Lower values indicate better anatomical correspondence.
+
+Finally, predictive uncertainty was estimated from the variability of the five ensemble models and flipped test-time augmentations. Uncertainty was quantified as the voxel-wise variance of the 15 predictions, averaged within the body mask like the other metrics and expressed in HU$^2$. This measure reflects disagreement between model predictions but does not account for all potential sources of uncertainty.
+
+
+\subsection{Statistical analysis and software}
+
+All statistical analyses were descriptive. Metrics were summarized as mean $\pm$ standard deviation across cases and anatomical regions, and no formal hypothesis testing was performed. Model training, inference, and evaluation used the Python-based TotalSynth/KonfAI pipeline; released-model deployment was implemented in the IMPACT-Synth 3D Slicer extension \cite{fedorov2012slicer}. Image-domain and anatomy-aware metric calculations used the same software pipeline for all model families to ensure consistent comparisons.
+
+Inference time and memory were measured with the dedicated MRI-to-CT model on the 140 held-out MRI cases, processed in a single run with their body masks provided, on a workstation with one NVIDIA RTX 3080 GPU (10 GB), an Intel Core i7-12700K processor, and 78 GB of RAM, with no other workload. Time per case was the wall-clock time of the run divided by the number of cases; peak GPU memory and peak resident host memory were sampled during the run. Three configurations were measured: the full ensemble (five models, three views each), one model with three views, and one model with a single view. Because the three model families share the same architecture and input size, the measurements apply to each of them.
+
+
+\section{Results}
+
+Figure~\ref{fig:synthesis_capability} shows representative synthetic CT images generated from MRI and CBCT inputs across different anatomical regions, alongside their reference CT images and corresponding error maps. Supplemental Figures S1 and S2 show corresponding examples in the coronal and sagittal planes, respectively. Table~\ref{tab:main_performance_summary} summarizes the overall quantitative performance of the dedicated and unified TotalSynth models, including external evaluation and fine-tuning results.
+Lower MAE, SAM, and registration error indicate better performance, whereas higher PSNR, SSIM, and Dice indicate better agreement with the reference CT or downstream anatomical structures. Uncertainty is not a performance measure: it reports the disagreement between ensemble predictions, and is useful insofar as it follows the error. Because the correspondence between input and reference CT is registration-derived, all metrics should be interpreted as agreement with curated supervision rather than absolute ground truth accuracy.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=1\textwidth]{figures/fig_synthesis_capability.png}
+\caption{Representative CT synthesis examples across source modalities and anatomical regions in axial plane. MRI = magnetic resonance imaging; CT = computed tomography; CBCT = cone-beam CT; sCT = synthetic CT; HU = Hounsfield unit. For each region, the registered source MRI or CBCT image, generated sCT, CT target, and absolute HU error map are shown. These examples were generated with a single ensemble member and no test-time augmentation for visual illustration; quantitative tables report the released model evaluation.}
+\label{fig:synthesis_capability}
+\end{figure}
+
+
+\subsection{Released model performance}
+
+The dedicated MRI-to-CT model achieved an overall MAE of 67.5 HU, SSIM of 0.920, and PSNR of 29.3 dB across abdominal, head-and-neck, thoracic, brain, pelvic, and CSIRO cases (Table~\ref{tab:main_performance_summary}). Regional MAE was lowest in the pelvis (48.2 HU), while higher errors were observed in head-and-neck (80.9 HU), brain (79.7 HU), and CSIRO (76.0 HU) cases (Supplemental Table S1).
+
+The dedicated CBCT-to-CT model achieved an overall MAE of 53.6 HU, SSIM of 0.939, and PSNR of 32.1 dB. Regional MAE was lowest in the pelvis (34.8 HU) and brain (39.4 HU), and highest in head-and-neck cases (67.5 HU) (Supplemental Table S2).
+
+Ensemble uncertainty within the body was lower for CBCT inputs than for MRI inputs, with mean voxel-wise variances of 2241 HU$^2$ for the CBCT-to-CT model and 4726 HU$^2$ for the MRI-to-CT model (Table~\ref{tab:main_performance_summary}). Among MRI regions, it was highest in the brain (7560 HU$^2$) and head and neck (4921 HU$^2$) and lowest in the thorax (2810 HU$^2$); among CBCT regions, it was lowest in the pelvis (1478 HU$^2$) (Supplemental Tables S1 and S2). Across cases, uncertainty followed the error, with Pearson correlation coefficients with MAE of 0.70 for the MRI-to-CT model and 0.82 for the CBCT-to-CT model.
+
+
+\begin{table}[!t]
+\centering
+\caption{Overall performance of released TotalSynth models and MTBD fine-tuning. MRI = magnetic resonance imaging; CT = computed tomography; CBCT = cone-beam CT; MTBD = Multimodal Total-Body Dynamic dataset; MAE = mean absolute error; HU = Hounsfield unit; SSIM = structural similarity index; PSNR = peak signal-to-noise ratio; uncertainty = mean voxel-wise variance of the 15 ensemble predictions within the body mask. Values report mean $\pm$ standard deviation. Detailed regional results are provided in Supplemental Tables S1--S4.}
+\label{tab:main_performance_summary}
+\small
+\tablesetup
+\begin{tabular}{@{}llcccc@{}}
+\toprule
+\tableheadershade
+Model and setting & Evaluation domain & MAE (HU) & SSIM & PSNR (dB) & Uncertainty (HU$^2$) \\
+\midrule
+MRI-to-CT & Primary MRI/CT & \mstd{67.5}{15.9} & \mstd{0.920}{0.025} & \mstd{29.3}{2.1} & \mstd{4726}{1961} \\
+CBCT-to-CT & Primary CBCT/CT & \mstd{53.6}{17.8} & \mstd{0.939}{0.026} & \mstd{32.1}{2.9} & \mstd{2241}{814} \\
+Unified model & MRI inputs & \mstd{67.7}{16.4} & \mstd{0.920}{0.025} & \mstd{29.2}{2.2} & \mstd{4319}{1709} \\
+Unified model & CBCT inputs & \mstd{54.2}{17.5} & \mstd{0.938}{0.025} & \mstd{31.9}{2.9} & \mstd{1812}{643} \\
+MRI-to-CT, direct & MTBD & \mstd{100.9}{18.7} & \mstd{0.968}{0.007} & \mstd{26.7}{1.4} & \mstd{17401}{7920} \\
+MRI-to-CT, fine-tuned & MTBD & \mstd{62.2}{6.2} & \mstd{0.982}{0.002} & \mstd{30.5}{0.9} & \mstd{3363}{639} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Unified model and external adaptation}
+
+The unified MRI/CBCT-to-CT model achieved overall MAE values of 67.7 HU on MRI inputs and 54.2 HU on CBCT inputs, compared with 67.5 HU and 53.6 HU for the corresponding dedicated models (Table~\ref{tab:main_performance_summary}; Supplemental Table S3).
+
+On external MTBD whole-body MRI data, direct inference without fine-tuning yielded an MAE of 100.9 HU. Fine-tuning reduced MAE to 62.2 HU and increased PSNR from 26.7 dB to 30.5 dB, with improvements observed for both in-phase and out-of-phase inputs (Supplemental Table S4). Without fine-tuning, uncertainty within the body reached 17401 HU$^2$, about four times the values on in-domain MRI inputs (4319--4726 HU$^2$), and was higher on out-of-phase images (23967 HU$^2$) than on in-phase images (10366 HU$^2$). Fine-tuning reduced it to 3363 HU$^2$.
+
+\subsection{Computational cost}
+
+With the full ensemble of five models and three views, inference took 23.0 seconds per case (3222 seconds for the 140 held-out MRI cases, with a mean of 18.1 million voxels per volume), with peak memory of 5.8 GB on the GPU and 6.3 GB on the host. One model with three views took 4.9 seconds per case (peak memory, 7.9 GB GPU and 3.6 GB host), and one model with a single view took 1.7 seconds per case (7.8 GB GPU and 2.5 GB host). The batch size was set automatically from the free GPU memory, so the GPU figures reflect the memory used rather than a minimum requirement.
+
+
+\section{Discussion}
+
+TotalSynth was developed as a reusable pretrained framework for MRI- and CBCT-based sCT generation across multiple anatomical regions, rather than for a specific anatomy or acquisition protocol. By combining heterogeneous datasets with quality-controlled registered pairs, the proposed approach achieved consistent overall synthesis performance across several anatomical regions. However, MAE varied between anatomical sites, being higher for head-and-neck and brain MRI inputs and for head-and-neck CBCT inputs. These differences mainly reflect the image content of each region rather than a lower synthesis quality. Because the correspondence between input and reference CT is registration-derived, a residual displacement $d(x)$ induces an intensity error of approximately $|\nabla I(x)\cdot d(x)|$: the same registration error costs more in regions with strong image gradients, such as the bone, air cavities, and teeth of the head and neck and the skull of the brain, than in regions dominated by homogeneous soft tissue \cite{boussot2026misalignment}. Regional MAE values should therefore be compared with this region-dependent floor rather than across regions.
+
+Despite these regional variations, the unified MRI/CBCT-to-CT model achieved performance comparable to that of the dedicated modality-specific models. This finding suggests that a single model can accommodate both imaging modalities without substantially compromising synthesis accuracy. Such an approach could simplify deployment in clinical centers exploring both MRI-only and CBCT-based adaptive radiotherapy workflows. Nevertheless, dedicated models may remain preferable for applications involving specific imaging protocols or anatomical regions.
+
+Although these results demonstrate the potential of multi-anatomical and multimodal training, generalization to previously unseen imaging conditions remains challenging. The external MTBD evaluation highlighted this limitation, with substantially higher MAE during direct inference despite high SSIM values. This discrepancy illustrates that structural similarity does not necessarily guarantee accurate HU estimation. Differences in whole-body coverage, Dixon MRI contrast, subject population, and CT acquisition protocols may explain the observed performance degradation \cite{guan2021domain,guo2026impact}. Fine-tuning substantially improved synthesis accuracy, emphasizing the importance of external validation \cite{yu2022external} and supporting the use of TotalSynth as a pretrained foundation for local adaptation rather than a universally applicable model.
+
+An important methodological aspect of TotalSynth is the use of registered image pairs as training references. This strategy enables supervised learning from datasets acquired at different time points and with different patient geometries, thereby increasing the amount and diversity of available training data. However, residual registration errors may introduce inaccuracies into the supervision signal \cite{boussot2026misalignment}. Quantitative anatomical comparisons and visual quality control were therefore used to identify and exclude problematic registrations. To support reproducibility, the IMPACT-based deformation fields and associated metadata have been made publicly available at \url{https://huggingface.co/datasets/VBoussot/synthrad2023-impact-registration} and \url{https://huggingface.co/datasets/VBoussot/synthrad2025-impact-registration}.
+
+Beyond the development of synthesis models, TotalSynth was designed to facilitate independent evaluation and adaptation by other research groups. The release includes curated registration-derived supervision, pretrained model weights (\url{https://huggingface.co/VBoussot/ImpactSynth}), the code and patient-level results of this study (\url{https://github.com/vboussot/TotalSynth-sCT}), and an accessible inference interface through the IMPACT-Synth extension for 3D Slicer, powered by KonfAI \cite{boussot2025konfai}. This framework supports local inference, uncertainty visualization, and anatomical evaluation, allowing researchers to assess model performance on their own imaging data and perform fine-tuning when necessary. However, these resources are intended for research use, and clinical deployment will require task-specific validation, particularly for dose calculation, contour propagation, and adaptive radiotherapy.
+
+Several limitations remain. Model performance depends on the diversity and quality of the training data, and uncommon anatomical configurations, unusual MRI contrasts, metal artifacts, and severe field-of-view truncation may challenge synthesis accuracy. Furthermore, image-domain and anatomical similarity metrics do not fully establish clinical suitability, and ensemble-based uncertainty estimates capture only part of the predictive uncertainty. Future work should therefore focus on expanding training diversity, improving generalization across imaging protocols, investigating registration-free or weakly supervised training strategies, and evaluating the impact of sCT accuracy on dose calculation and adaptive radiotherapy workflows.
+
+\section{Conclusion}
+
+TotalSynth provides publicly available pretrained models for whole-body synthetic CT generation from MRI and CBCT images, together with an accessible inference workflow through the IMPACT-Synth 3D Slicer extension. By combining multi-dataset supervision, quality-controlled CT registration, and dedicated and unified model families, TotalSynth offers a practical baseline for radiotherapy research. External evaluation demonstrates the importance of domain shift, while fine-tuning supports adaptation to local imaging conditions.
+
+
+\section{Ethical Approval}
+\label{sec:ethics}
+The institutional cohorts D1, D2, and D4 were conducted in accordance with statutory requirements and approved by the regional research ethics committee (Comité de Protection des Personnes, Ouest V, Rennes, ARCOL 2015-02-45-01). All participants in these institutional cohorts gave written informed consent to participate in the study. GoldAtlas (D3) is a public dataset collected under its original ethical approval (dnr:2015/09-31), with informed consent from all included patients. The remaining public datasets were used according to their respective data access conditions and citation requirements.
+
+\section{Funding}
+\label{sec:acknowledgments}
+The work presented in this article was supported by the French National Research Agency as part of the VATSop project (ANR-20-CE19-0015) and by the French National Research Agency as part of the DIMADOSE project (C. Hémon).
+
+\section{Disclosures}
+The authors have no relevant financial or non-financial interests to disclose.
+
+\section{Use of Artificial Intelligence Tools}
+While preparing this work, the authors used ChatGPT to enhance the writing structure and refine grammar. After using these tools, the authors reviewed and edited the content as needed and take full responsibility for the publication's content.
+
+\section{Data and Code Availability}
+The registration-derived SynthRAD2023 and SynthRAD2025 supervision, deformation fields, and associated metadata are available at \url{https://huggingface.co/datasets/VBoussot/synthrad2023-impact-registration} and \url{https://huggingface.co/datasets/VBoussot/synthrad2025-impact-registration}. Access to the original public challenge images remains governed by the corresponding SynthRAD data access conditions. The released TotalSynth models (MRI-to-CT, CBCT-to-CT, unified, and fine-tuned on whole-body Dixon MRI) are available at \url{https://huggingface.co/VBoussot/ImpactSynth}, and the inference workflow through the IMPACT-Synth 3D Slicer extension at \url{https://github.com/vboussot/SlicerImpactSynth}. The code, configurations, and patient-level results needed to reproduce the tables of this article are available at \url{https://github.com/vboussot/TotalSynth-sCT}. Institutional prostate cohorts cannot be publicly redistributed because of consent and privacy restrictions.
+
+
+\bibliographystyle{unsrt}  
+\bibliography{biblio.bib}
+
+\clearpage
+
+\section*{Supplemental Material}
+\setcounter{table}{0}
+\renewcommand{\thetable}{S\arabic{table}}
+\setcounter{figure}{0}
+\renewcommand{\thefigure}{S\arabic{figure}}
+
+\subsection*{Supplemental Tables: Regional Quantitative Results}
+
+\begin{table}[!ht]
+\centering
+\caption{Regional evaluation of the released MRI-to-CT model. Mean $\pm$ standard deviation; case counts refer to the image-domain and Dice analyses. CSIRO identifies the external MRI-to-CT subset. MRI = magnetic resonance imaging; CBCT = cone-beam CT; CT = computed tomography; MAE = mean absolute error (HU); PSNR = peak signal-to-noise ratio (dB); SSIM = structural similarity index; Dice = Dice similarity coefficient; SAM = Segment Anything Model-based perceptual distance; Reg = registration-based score; Uncertainty = mean predictive variance within the body mask (HU$^2$). AB = abdomen; HN = head and neck; TH = thorax.}
+\label{tab:mri_to_ct_release_cv_metrics}
+\scriptsize
+\metricstablesetup
+\begin{tabular}{@{}lccccccc@{}}
+\toprule
+\tableheadershade
+Region & MAE & PSNR & SSIM & Dice & SAM & Reg & Uncertainty \\
+\midrule
+AB ($n=22$) & \mstd{60.1}{9.4} & \mstd{30.0}{1.5} & \mstd{0.908}{0.022} & \mstd{0.598}{0.070} & \mstd{27.4}{4.2} & \mstd{0.511}{0.117} & \mstd{3934}{1182} \\
+HN ($n=21$) & \mstd{80.9}{13.1} & \mstd{28.4}{1.4} & \mstd{0.925}{0.030} & \mstd{0.645}{0.106} & \mstd{13.4}{2.1} & \mstd{0.435}{0.066} & \mstd{4921}{1478} \\
+TH ($n=23$) & \mstd{58.5}{11.2} & \mstd{31.2}{1.9} & \mstd{0.940}{0.019} & \mstd{0.645}{0.051} & \mstd{21.6}{4.2} & \mstd{0.466}{0.089} & \mstd{2810}{1126} \\
+brain ($n=27$) & \mstd{79.7}{8.6} & \mstd{27.4}{0.9} & \mstd{0.915}{0.015} & \mstd{0.751}{0.096} & \mstd{13.2}{2.6} & \mstd{1.199}{0.138} & \mstd{7560}{1312} \\
+pelvis ($n=23$) & \mstd{48.2}{8.3} & \mstd{31.3}{1.4} & \mstd{0.901}{0.025} & \mstd{0.756}{0.108} & \mstd{25.9}{3.6} & \mstd{0.574}{0.094} & \mstd{3748}{928} \\
+CSIRO ($n=24$) & \mstd{76.0}{10.1} & \mstd{27.7}{1.0} & \mstd{0.929}{0.016} & \mstd{0.774}{0.035} & \mstd{30.9}{3.9} & \mstd{0.434}{0.054} & \mstd{4869}{1074} \\
+\midrule
+overall ($n=140$) & \mstd{67.5}{16.0} & \mstd{29.3}{2.1} & \mstd{0.920}{0.025} & \mstd{0.698}{0.106} & \mstd{22.0}{7.7} & \mstd{0.622}{0.303} & \mstd{4726}{1961} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\begin{table}[!ht]
+\centering
+\caption{Regional evaluation of the released CBCT-to-CT model. Mean $\pm$ standard deviation. MRI = magnetic resonance imaging; CBCT = cone-beam CT; CT = computed tomography; MAE = mean absolute error (HU); PSNR = peak signal-to-noise ratio (dB); SSIM = structural similarity index; Dice = Dice similarity coefficient; SAM = Segment Anything Model-based perceptual distance; Reg = registration-based score; Uncertainty = mean predictive variance within the body mask (HU$^2$). AB = abdomen; HN = head and neck; TH = thorax.}
+\label{tab:cbct_to_ct_release_cv_metrics}
+\scriptsize
+\metricstablesetup
+\begin{tabular}{@{}lccccccc@{}}
+\toprule
+\tableheadershade
+Region & MAE & PSNR & SSIM & Dice & SAM & Reg & Uncertainty \\
+\midrule
+AB ($n=32$) & \mstd{57.2}{15.0} & \mstd{31.1}{2.4} & \mstd{0.926}{0.023} & \mstd{0.673}{0.086} & \mstd{17.7}{4.5} & \mstd{1.049}{0.016} & \mstd{2503}{799} \\
+HN ($n=37$) & \mstd{67.5}{15.8} & \mstd{30.0}{2.2} & \mstd{0.946}{0.021} & \mstd{0.717}{0.075} & \mstd{8.9}{1.5} & \mstd{1.052}{0.036} & \mstd{2643}{761} \\
+TH ($n=34$) & \mstd{57.3}{15.3} & \mstd{32.0}{2.7} & \mstd{0.928}{0.019} & \mstd{0.724}{0.075} & \mstd{16.2}{4.5} & \mstd{1.045}{0.021} & \mstd{2286}{746} \\
+brain ($n=26$) & \mstd{39.4}{6.1} & \mstd{34.0}{1.6} & \mstd{0.970}{0.007} & \mstd{0.905}{0.071} & \mstd{7.2}{1.0} & \mstd{1.013}{0.002} & \mstd{1905}{485} \\
+pelvis ($n=21$) & \mstd{34.8}{8.3} & \mstd{35.1}{2.5} & \mstd{0.924}{0.023} & \mstd{0.835}{0.078} & \mstd{20.1}{4.6} & \mstd{1.023}{0.005} & \mstd{1478}{657} \\
+\midrule
+overall ($n=150$) & \mstd{53.6}{17.8} & \mstd{32.1}{2.9} & \mstd{0.939}{0.026} & \mstd{0.758}{0.113} & \mstd{13.7}{6.0} & \mstd{1.039}{0.027} & \mstd{2241}{814} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!ht]
+\centering
+\caption{Regional evaluation of the released unified MRI/CBCT-to-CT model by source modality. Mean $\pm$ standard deviation. CSIRO identifies the external MRI-to-CT subset. MRI = magnetic resonance imaging; CBCT = cone-beam CT; CT = computed tomography; MAE = mean absolute error (HU); PSNR = peak signal-to-noise ratio (dB); SSIM = structural similarity index; Dice = Dice similarity coefficient; SAM = Segment Anything Model-based perceptual distance; Reg = registration-based score; Uncertainty = mean predictive variance within the body mask (HU$^2$). AB = abdomen; HN = head and neck; TH = thorax.}
+\label{tab:unified_mr_cbct_release_cv_metrics}
+\scriptsize
+\metricstablesetup
+\begin{tabular}{@{}lccccccc@{}}
+\toprule
+\tableheadershade
+Region & MAE & PSNR & SSIM & Dice & SAM & Reg & Uncertainty \\
+\midrule
+MRI-to-CT/AB & \mstd{59.6}{9.6} & \mstd{30.0}{1.5} & \mstd{0.909}{0.023} & \mstd{0.591}{0.066} & \mstd{27.4}{4.0} & \mstd{0.526}{0.140} & \mstd{3718}{1310} \\
+MRI-to-CT/HN & \mstd{80.3}{12.5} & \mstd{28.4}{1.3} & \mstd{0.926}{0.029} & \mstd{0.641}{0.106} & \mstd{13.4}{2.1} & \mstd{0.423}{0.080} & \mstd{4427}{1329} \\
+MRI-to-CT/TH & \mstd{58.0}{11.3} & \mstd{31.2}{1.9} & \mstd{0.940}{0.019} & \mstd{0.635}{0.054} & \mstd{21.9}{4.6} & \mstd{0.436}{0.087} & \mstd{2484}{911} \\
+MRI-to-CT/brain & \mstd{80.8}{9.2} & \mstd{27.3}{1.0} & \mstd{0.913}{0.016} & \mstd{0.763}{0.108} & \mstd{13.4}{2.9} & \mstd{1.185}{0.132} & \mstd{6465}{1207} \\
+MRI-to-CT/pelvis & \mstd{47.4}{8.0} & \mstd{31.4}{1.5} & \mstd{0.902}{0.025} & \mstd{0.771}{0.102} & \mstd{27.0}{3.9} & \mstd{0.579}{0.096} & \mstd{3431}{706} \\
+MRI-to-CT/CSIRO & \mstd{77.0}{10.5} & \mstd{27.6}{1.1} & \mstd{0.928}{0.016} & \mstd{0.775}{0.038} & \mstd{31.0}{4.2} & \mstd{0.274}{0.060} & \mstd{4973}{1034} \\
+MRI-to-CT/overall & \mstd{67.7}{16.4} & \mstd{29.2}{2.2} & \mstd{0.920}{0.025} & \mstd{0.701}{0.112} & \mstd{22.2}{7.9} & \mstd{0.585}{0.324} & \mstd{4319}{1709} \\
+\midrule
+CBCT-to-CT/AB & \mstd{56.8}{14.3} & \mstd{31.1}{2.4} & \mstd{0.927}{0.024} & \mstd{0.665}{0.084} & \mstd{18.9}{4.8} & \mstd{0.013}{0.004} & \mstd{1978}{805} \\
+CBCT-to-CT/HN & \mstd{68.0}{15.6} & \mstd{29.9}{2.2} & \mstd{0.947}{0.021} & \mstd{0.707}{0.076} & \mstd{10.4}{1.6} & \mstd{0.012}{0.004} & \mstd{1919}{514} \\
+CBCT-to-CT/TH & \mstd{58.4}{14.7} & \mstd{31.8}{2.6} & \mstd{0.926}{0.018} & \mstd{0.726}{0.061} & \mstd{17.8}{4.5} & \mstd{0.015}{0.004} & \mstd{1860}{555} \\
+CBCT-to-CT/brain & \mstd{40.6}{6.2} & \mstd{33.5}{1.5} & \mstd{0.968}{0.007} & \mstd{0.907}{0.070} & \mstd{9.4}{2.0} & \mstd{0.028}{0.011} & \mstd{1804}{583} \\
+CBCT-to-CT/pelvis & \mstd{34.6}{7.7} & \mstd{35.2}{2.5} & \mstd{0.925}{0.022} & \mstd{0.828}{0.081} & \mstd{22.7}{4.8} & \mstd{0.023}{0.008} & \mstd{1282}{464} \\
+CBCT-to-CT/overall & \mstd{54.2}{17.5} & \mstd{31.9}{2.9} & \mstd{0.938}{0.025} & \mstd{0.752}{0.113} & \mstd{15.4}{6.1} & \mstd{0.017}{0.009} & \mstd{1812}{643} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+
+\begin{table}[!ht]
+\centering
+\caption{External MTBD evaluation before (direct inference) and after fine-tuning. IN = in-phase Dixon MRI; OUT = out-of-phase Dixon MRI. Mean $\pm$ standard deviation. MTBD = Multimodal Total-Body Dynamic dataset. MRI = magnetic resonance imaging; CBCT = cone-beam CT; CT = computed tomography; MAE = mean absolute error (HU); PSNR = peak signal-to-noise ratio (dB); SSIM = structural similarity index; Dice = Dice similarity coefficient; SAM = Segment Anything Model-based perceptual distance; Reg = registration-based score; Uncertainty = mean predictive variance within the body mask (HU$^2$). }
+\label{tab:bicmac_external_finetune}
+\scriptsize
+\metricstablesetup
+\begin{tabular}{@{}llccccccc@{}}
+\toprule
+\tableheadershade
+Setting & Contrast & MAE & PSNR & SSIM & Dice & SAM & Reg & Uncertainty \\
+\midrule
+Direct & IN & \mstd{85.3}{6.2} & \mstd{27.9}{0.6} & \mstd{0.973}{0.003} & \mstd{0.568}{0.046} & \mstd{19.0}{1.6} & \mstd{0.180}{0.028} & \mstd{10366}{2316} \\
+Direct & OUT & \mstd{115.5}{14.0} & \mstd{25.6}{0.9} & \mstd{0.962}{0.004} & \mstd{0.350}{0.070} & \mstd{20.8}{1.5} & \mstd{0.204}{0.027} & \mstd{23967}{5193} \\
+Direct & Overall & \mstd{100.9}{18.7} & \mstd{26.7}{1.4} & \mstd{0.968}{0.007} & \mstd{0.455}{0.124} & \mstd{19.9}{1.8} & \mstd{0.193}{0.030} & \mstd{17401}{7920} \\
+\midrule
+Fine-tuned & IN & \mstd{60.0}{5.4} & \mstd{30.7}{0.9} & \mstd{0.983}{0.002} & \mstd{0.662}{0.025} & \mstd{13.1}{1.1} & \mstd{0.198}{0.028} & \mstd{3031}{488} \\
+Fine-tuned & OUT & \mstd{64.4}{6.1} & \mstd{30.2}{0.9} & \mstd{0.981}{0.002} & \mstd{0.648}{0.026} & \mstd{13.4}{1.1} & \mstd{0.209}{0.029} & \mstd{3696}{598} \\
+Fine-tuned & Overall & \mstd{62.2}{6.2} & \mstd{30.5}{0.9} & \mstd{0.982}{0.002} & \mstd{0.655}{0.026} & \mstd{13.2}{1.1} & \mstd{0.203}{0.029} & \mstd{3363}{639} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\clearpage
+\subsection*{Supplemental Figures: Qualitative Synthesis Examples}
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=\textwidth]{figures/figS_synthesis_coronal.png}
+\caption{Representative synthetic CT images in the coronal plane across source modalities and anatomical regions. MRI = magnetic resonance imaging; CBCT = cone-beam computed tomography; CT = computed tomography; sCT = synthetic CT; HU = Hounsfield unit. Registered source images, generated sCT images, reference CT images, and absolute HU error maps are displayed.}
+\label{fig:synthesis_coronal}
+\end{figure}
+
+\clearpage
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=\textwidth]{figures/figS_synthesis_sagittal.png}
+\caption{Representative synthetic CT images in the sagittal plane across source modalities and anatomical regions. MRI = magnetic resonance imaging; CBCT = cone-beam computed tomography; CT = computed tomography; sCT = synthetic CT; HU = Hounsfield unit. Registered source images, generated sCT images, reference CT images, and absolute HU error maps are displayed.}
+\label{fig:synthesis_sagittal}
+\end{figure}
+
+\clearpage
+
+\end{document}

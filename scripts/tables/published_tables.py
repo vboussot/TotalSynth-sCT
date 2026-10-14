@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Write the 6 tables of the paper from its source (paper/arxiv_v1.tex)."""
+"""Write the 6 tables of the paper from its source (paper/manuscript.tex)."""
 
 import re
 from pathlib import Path
@@ -8,7 +8,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 def main() -> None:
-    source = (ROOT / "paper/arxiv_v1.tex").read_text(encoding="utf-8")
+    source = (ROOT / "paper/manuscript.tex").read_text(encoding="utf-8")
     tables = re.findall(r"\\begin\{table\*?\}.*?\\end\{table\*?\}", source, re.DOTALL)
     if len(tables) != 6:
         raise SystemExit(f"Expected 6 tables, found {len(tables)}")

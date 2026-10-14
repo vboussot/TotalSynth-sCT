@@ -1,8 +1,10 @@
-"""The SAM metric of the tables, for KonfAI evaluation (``totalsynth.metrics:SAM_Perceptual``)."""
+"""Metrics of the tables that KonfAI does not provide as such, for KonfAI evaluation
+(``totalsynth.metrics:SAM_Perceptual``, ``totalsynth.metrics:MaskedMean``)."""
 
 # No `from __future__ import annotations`: KonfAI reads these annotations at runtime.
 import torch
 import torch.nn.functional as F
+from konfai.metric.measure import Mean
 from konfai.metric.measure import SAM_Perceptual as KonfAISAMPerceptual
 
 
@@ -19,3 +21,14 @@ class SAM_Perceptual(KonfAISAMPerceptual):
         # KonfAI >= 1.8.7 passes the attributes of the targets only, which is what the normalization needs.
         assert len(attributes) == len(targets), "SAM_Perceptual needs KonfAI >= 1.8.7"
         return super().forward(pad(output), *(pad(target) for target in targets), attributes=attributes)
+
+
+class MaskedMean(Mean):
+    """Mean of the output inside the body mask, the first target (KonfAI's Mean ignores its targets)."""
+
+    def __init__(self, name: str = "Uncertainty") -> None:
+        super().__init__(name)
+
+    def forward(self, output, *targets):
+        value = output.float()[targets[0] > 0].mean()
+        return value, value.detach()

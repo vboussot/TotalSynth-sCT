@@ -12,7 +12,7 @@ fetches the inference configuration of each model (`Prediction.yml`,
 | `MR` | dedicated MRI-to-CT model |
 | `CBCT` | dedicated CBCT-to-CT model |
 | `MR_CBCT` | unified MRI/CBCT-to-CT model |
-| `Finetune` | MRI-to-CT model fine-tuned on Multimodal-HC |
+| `Finetune` | MRI-to-CT model fine-tuned on MTBD |
 
 Each folder is a KonfAI application. On your own images, it runs from the
 IMPACT-Synth 3D Slicer extension or from the command line:

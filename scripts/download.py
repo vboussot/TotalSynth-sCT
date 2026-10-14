@@ -5,7 +5,7 @@ Standard library only, so it runs before any environment is installed.
 
 The four models are in the Hugging Face repository VBoussot/ImpactSynth, pinned here to one revision: the
 dedicated MRI-to-CT model (MR), the dedicated CBCT-to-CT model (CBCT), the unified model (MR_CBCT) and the
-Multimodal-HC fine-tuned model (Finetune). Each folder holds five fold checkpoints, checked against
+MTBD fine-tuned model (Finetune). Each folder holds five fold checkpoints, checked against
 models/manifest.csv, and its inference configuration (Prediction.yml, UNetPlusPlus.yml, Model.py).
 
 TotalSegmentator (Dice), the SAM 2.1 encoder (SAM) and the segmentation encoders (Reg) are fetched
