@@ -80,7 +80,7 @@ For each task, the script predicts:
 | Model | Held-out cases | Predictions per case |
 |---|---|---|
 | Dedicated (MRI-to-CT for Task 1, CBCT-to-CT for Task 2) | 140 and 150 | 5 folds × 3 views (original, two flips), averaged |
-| Unified MRI/CBCT-to-CT | 136 and 144 | 5 folds × 3 views, averaged |
+| Unified MRI/CBCT-to-CT | 140 and 150 | 5 folds × 3 views, averaged |
 
 Output: `predictions/Task_{t}/{MODEL}/CV/Output/{case}/sCT.mha`, where `MODEL`
 is `Dedicated` or `Unified`, with `Uncertainty.mha`, the variance of the 15

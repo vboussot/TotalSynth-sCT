@@ -38,8 +38,8 @@ MODELS = {(1, "Dedicated"): "MR", (2, "Dedicated"): "CBCT", (1, "Unified"): "MR_
 
 
 def subset(task: int, model: str, check: bool) -> str:
-    """Held-out list of a model: the unified model has its own, a subset of the task's."""
-    name = "Check" if check else "Validation" + ("_unified" if model == "Unified" else "")
+    """Case list of a model: the held-out cases of the task, the same for the dedicated and the unified model."""
+    name = "Check" if check else "Validation"
     return f"./data/splits/task_{task}/{name}.txt"
 
 

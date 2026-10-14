@@ -6,7 +6,7 @@ read from `data/processed/synthrad{year}/Task_{task}/{region}/{patient}` and
 `data/processed/external/Task_1/CSIRO/{patient}`.
 
 `splits/` holds, for each task, the held-out list of the dedicated model
-(`Validation.txt`), that of the unified model (`Validation_unified.txt`) and
+(`Validation.txt`), shared by the dedicated and the unified models, and
 the quick-check list (`Check.txt`). `task_1/MultimodalHC.txt` lists the MTBD
 subjects of Table 6.
 

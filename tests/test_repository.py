@@ -34,13 +34,11 @@ def test_manifest_lists_the_four_models() -> None:
 
 
 def test_held_out_lists() -> None:
-    for task, cases, unified in ((1, 140, 136), (2, 150, 144)):
+    for task, cases in ((1, 140), (2, 150)):
         folder = ROOT / f"data/splits/task_{task}"
         held_out = folder.joinpath("Validation.txt").read_text().split()
         assert len(held_out) == len(set(held_out)) == cases
-        subset = folder.joinpath("Validation_unified.txt").read_text().split()
-        assert len(subset) == unified and set(subset) <= set(held_out)
-        assert set(folder.joinpath("Check.txt").read_text().split()) <= set(subset)
+        assert set(folder.joinpath("Check.txt").read_text().split()) <= set(held_out)
 
 
 def test_metric_bundle_is_complete() -> None:

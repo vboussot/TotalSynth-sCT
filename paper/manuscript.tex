@@ -60,7 +60,7 @@
 \sloppy
 \textbf{Purpose:} To develop and evaluate TotalSynth, a reusable pretrained framework for whole-body synthetic CT (sCT) generation from MRI and cone-beam CT (CBCT) images. \\
 \textbf{Materials and Methods:} In this retrospective technical study, data were assembled between 2020 and 2026 from multiple publicly available MRI/CT and CBCT/CT datasets covering the brain, head and neck, thorax, abdomen, and pelvis, supplemented by four prostate MRI/CT cohorts and an external whole-body MRI/CT dataset. After registration quality control, 1450 of 1800 public challenge pairs were retained. The corpus also included 84 additional prostate MRI/CT and 60 external whole-body MRI/CT cases from the Multimodal Total-Body Dynamic dataset (MTBD). Three deep learning model families (MRI-to-CT, CBCT-to-CT, and unified MRI/CBCT-to-CT), each comprising five models, were evaluated using image-domain metrics (MAE, SSIM, PSNR), anatomy-aware and registration-based metrics, and uncertainty estimates.\\
-\textbf{Results:} The released MRI-to-CT model achieved an overall MAE of 67 HU, SSIM of 0.920, and PSNR of 29.3 dB. The CBCT-to-CT model achieved an overall MAE of 54 HU, SSIM of 0.939, and PSNR of 32.1 dB. The unified model maintained similar performance on MRI inputs (MAE, 68 HU) and CBCT inputs (MAE, 54 HU). On external MTBD data, MRI-to-CT MAE was 101 HU without fine-tuning and 62 HU after fine-tuning, and the mean voxel-wise uncertainty within the body decreased from 17401 HU$^2$ to 3363 HU$^2$. Inference with the full five-model ensemble took 23 seconds per case on a single consumer graphics processing unit (GPU).\\
+\textbf{Results:} The released MRI-to-CT model achieved an overall MAE of 67 HU, SSIM of 0.920, and PSNR of 29.3 dB. The CBCT-to-CT model achieved an overall MAE of 54 HU, SSIM of 0.939, and PSNR of 32.1 dB. The unified model maintained similar performance on MRI inputs (MAE, 68 HU) and CBCT inputs (MAE, 54 HU). On external MTBD data, MRI-to-CT MAE was 100 HU without fine-tuning and 62 HU after fine-tuning, and the mean voxel-wise uncertainty within the body decreased from 17123 HU$^2$ to 3363 HU$^2$. Inference with the full five-model ensemble took 23 seconds per case on a single consumer graphics processing unit (GPU).\\
 \textbf{Conclusion:} TotalSynth provides publicly available pretrained models and a 3D Slicer extension for MRI- and CBCT-based CT synthesis across multiple anatomical regions. External evaluation highlights the importance of local validation and optional fine-tuning under domain shift.
 \end{abstract}
 
@@ -70,8 +70,8 @@ TotalSynth provides reusable computed tomography synthesis models from magnetic 
 \section*{Key Points}
 \begin{itemize}
     \item The training dataset combined public radiotherapy challenge data and additional prostate MRI/CT cohorts, while an independent whole-body MRI/CT dataset was used for external evaluation and fine-tuning.
-    \item Dedicated MRI-to-CT and cone-beam CT-to-CT models achieved overall mean absolute errors of 67.5 HU and 53.6 HU, respectively.
-    \item On external whole-body MRI data, fine-tuning reduced mean absolute error from 100.9 HU to 62.2 HU.
+    \item Dedicated MRI-to-CT and cone-beam CT-to-CT models achieved overall mean absolute errors of 67.5 HU and 53.5 HU, respectively.
+    \item On external whole-body MRI data, fine-tuning reduced mean absolute error from 100.4 HU to 62.2 HU.
 \end{itemize}
 
 \section{Introduction}
@@ -222,7 +222,7 @@ Lower MAE, SAM, and registration error indicate better performance, whereas high
 
 The dedicated MRI-to-CT model achieved an overall MAE of 67.5 HU, SSIM of 0.920, and PSNR of 29.3 dB across abdominal, head-and-neck, thoracic, brain, pelvic, and CSIRO cases (Table~\ref{tab:main_performance_summary}). Regional MAE was lowest in the pelvis (48.2 HU), while higher errors were observed in head-and-neck (80.9 HU), brain (79.7 HU), and CSIRO (76.0 HU) cases (Supplemental Table S1).
 
-The dedicated CBCT-to-CT model achieved an overall MAE of 53.6 HU, SSIM of 0.939, and PSNR of 32.1 dB. Regional MAE was lowest in the pelvis (34.8 HU) and brain (39.4 HU), and highest in head-and-neck cases (67.5 HU) (Supplemental Table S2).
+The dedicated CBCT-to-CT model achieved an overall MAE of 53.5 HU, SSIM of 0.939, and PSNR of 32.1 dB. Regional MAE was lowest in the pelvis (34.8 HU) and brain (39.4 HU), and highest in head-and-neck cases (67.5 HU) (Supplemental Table S2).
 
 Ensemble uncertainty within the body was lower for CBCT inputs than for MRI inputs, with mean voxel-wise variances of 2241 HU$^2$ for the CBCT-to-CT model and 4726 HU$^2$ for the MRI-to-CT model (Table~\ref{tab:main_performance_summary}). Among MRI regions, it was highest in the brain (7560 HU$^2$) and head and neck (4921 HU$^2$) and lowest in the thorax (2810 HU$^2$); among CBCT regions, it was lowest in the pelvis (1478 HU$^2$) (Supplemental Tables S1 and S2). Across cases, uncertainty followed the error, with Pearson correlation coefficients with MAE of 0.70 for the MRI-to-CT model and 0.82 for the CBCT-to-CT model.
 
@@ -238,21 +238,21 @@ Ensemble uncertainty within the body was lower for CBCT inputs than for MRI inpu
 \tableheadershade
 Model and setting & Evaluation domain & MAE (HU) & SSIM & PSNR (dB) & Uncertainty (HU$^2$) \\
 \midrule
-MRI-to-CT & Primary MRI/CT & \mstd{67.5}{15.9} & \mstd{0.920}{0.025} & \mstd{29.3}{2.1} & \mstd{4726}{1961} \\
-CBCT-to-CT & Primary CBCT/CT & \mstd{53.6}{17.8} & \mstd{0.939}{0.026} & \mstd{32.1}{2.9} & \mstd{2241}{814} \\
-Unified model & MRI inputs & \mstd{67.7}{16.4} & \mstd{0.920}{0.025} & \mstd{29.2}{2.2} & \mstd{4319}{1709} \\
-Unified model & CBCT inputs & \mstd{54.2}{17.5} & \mstd{0.938}{0.025} & \mstd{31.9}{2.9} & \mstd{1812}{643} \\
-MRI-to-CT, direct & MTBD & \mstd{100.9}{18.7} & \mstd{0.968}{0.007} & \mstd{26.7}{1.4} & \mstd{17401}{7920} \\
-MRI-to-CT, fine-tuned & MTBD & \mstd{62.2}{6.2} & \mstd{0.982}{0.002} & \mstd{30.5}{0.9} & \mstd{3363}{639} \\
+MRI-to-CT & Primary MRI/CT & \mstd{67.5}{16.0} & \mstd{0.920}{0.025} & \mstd{29.3}{2.1} & \mstd{4726}{1961} \\
+CBCT-to-CT & Primary CBCT/CT & \mstd{53.5}{17.8} & \mstd{0.939}{0.026} & \mstd{32.1}{2.9} & \mstd{2241}{814} \\
+Unified model & MRI inputs & \mstd{67.7}{16.3} & \mstd{0.919}{0.025} & \mstd{29.2}{2.2} & \mstd{4320}{1696} \\
+Unified model & CBCT inputs & \mstd{54.0}{17.3} & \mstd{0.938}{0.025} & \mstd{31.9}{2.9} & \mstd{1805}{638} \\
+MRI-to-CT, direct & MTBD & \mstd{100.4}{18.6} & \mstd{0.968}{0.007} & \mstd{26.7}{1.4} & \mstd{17123}{7929} \\
+MRI-to-CT, fine-tuned & MTBD & \mstd{62.2}{6.2} & \mstd{0.982}{0.002} & \mstd{30.4}{0.9} & \mstd{3363}{639} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \subsection{Unified model and external adaptation}
 
-The unified MRI/CBCT-to-CT model achieved overall MAE values of 67.7 HU on MRI inputs and 54.2 HU on CBCT inputs, compared with 67.5 HU and 53.6 HU for the corresponding dedicated models (Table~\ref{tab:main_performance_summary}; Supplemental Table S3).
+The unified MRI/CBCT-to-CT model achieved overall MAE values of 67.7 HU on MRI inputs and 54.0 HU on CBCT inputs, compared with 67.5 HU and 53.5 HU for the corresponding dedicated models (Table~\ref{tab:main_performance_summary}; Supplemental Table S3).
 
-On external MTBD whole-body MRI data, direct inference without fine-tuning yielded an MAE of 100.9 HU. Fine-tuning reduced MAE to 62.2 HU and increased PSNR from 26.7 dB to 30.5 dB, with improvements observed for both in-phase and out-of-phase inputs (Supplemental Table S4). Without fine-tuning, uncertainty within the body reached 17401 HU$^2$, about four times the values on in-domain MRI inputs (4319--4726 HU$^2$), and was higher on out-of-phase images (23967 HU$^2$) than on in-phase images (10366 HU$^2$). Fine-tuning reduced it to 3363 HU$^2$.
+On external MTBD whole-body MRI data, direct inference without fine-tuning yielded an MAE of 100.4 HU. Fine-tuning reduced MAE to 62.2 HU and increased PSNR from 26.7 dB to 30.4 dB, with improvements observed for both in-phase and out-of-phase inputs (Supplemental Table S4). Without fine-tuning, uncertainty within the body reached 17123 HU$^2$, about four times the values on in-domain MRI inputs (4320--4726 HU$^2$), and was higher on out-of-phase images (23967 HU$^2$) than on in-phase images (10280 HU$^2$). Fine-tuning reduced it to 3363 HU$^2$.
 
 \subsection{Computational cost}
 
@@ -321,7 +321,7 @@ The registration-derived SynthRAD2023 and SynthRAD2025 supervision, deformation 
 Region & MAE & PSNR & SSIM & Dice & SAM & Reg & Uncertainty \\
 \midrule
 AB ($n=22$) & \mstd{60.1}{9.4} & \mstd{30.0}{1.5} & \mstd{0.908}{0.022} & \mstd{0.598}{0.070} & \mstd{27.4}{4.2} & \mstd{0.511}{0.117} & \mstd{3934}{1182} \\
-HN ($n=21$) & \mstd{80.9}{13.1} & \mstd{28.4}{1.4} & \mstd{0.925}{0.030} & \mstd{0.645}{0.106} & \mstd{13.4}{2.1} & \mstd{0.435}{0.066} & \mstd{4921}{1478} \\
+HN ($n=21$) & \mstd{80.9}{13.1} & \mstd{28.4}{1.4} & \mstd{0.925}{0.030} & \mstd{0.644}{0.106} & \mstd{13.4}{2.1} & \mstd{0.435}{0.066} & \mstd{4921}{1478} \\
 TH ($n=23$) & \mstd{58.5}{11.2} & \mstd{31.2}{1.9} & \mstd{0.940}{0.019} & \mstd{0.645}{0.051} & \mstd{21.6}{4.2} & \mstd{0.466}{0.089} & \mstd{2810}{1126} \\
 brain ($n=27$) & \mstd{79.7}{8.6} & \mstd{27.4}{0.9} & \mstd{0.915}{0.015} & \mstd{0.751}{0.096} & \mstd{13.2}{2.6} & \mstd{1.199}{0.138} & \mstd{7560}{1312} \\
 pelvis ($n=23$) & \mstd{48.2}{8.3} & \mstd{31.3}{1.4} & \mstd{0.901}{0.025} & \mstd{0.756}{0.108} & \mstd{25.9}{3.6} & \mstd{0.574}{0.094} & \mstd{3748}{928} \\
@@ -350,7 +350,7 @@ TH ($n=34$) & \mstd{57.3}{15.3} & \mstd{32.0}{2.7} & \mstd{0.928}{0.019} & \mstd
 brain ($n=26$) & \mstd{39.4}{6.1} & \mstd{34.0}{1.6} & \mstd{0.970}{0.007} & \mstd{0.905}{0.071} & \mstd{7.2}{1.0} & \mstd{1.013}{0.002} & \mstd{1905}{485} \\
 pelvis ($n=21$) & \mstd{34.8}{8.3} & \mstd{35.1}{2.5} & \mstd{0.924}{0.023} & \mstd{0.835}{0.078} & \mstd{20.1}{4.6} & \mstd{1.023}{0.005} & \mstd{1478}{657} \\
 \midrule
-overall ($n=150$) & \mstd{53.6}{17.8} & \mstd{32.1}{2.9} & \mstd{0.939}{0.026} & \mstd{0.758}{0.113} & \mstd{13.7}{6.0} & \mstd{1.039}{0.027} & \mstd{2241}{814} \\
+overall ($n=150$) & \mstd{53.5}{17.8} & \mstd{32.1}{2.9} & \mstd{0.939}{0.026} & \mstd{0.758}{0.113} & \mstd{13.7}{6.0} & \mstd{1.039}{0.027} & \mstd{2241}{814} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -366,20 +366,20 @@ overall ($n=150$) & \mstd{53.6}{17.8} & \mstd{32.1}{2.9} & \mstd{0.939}{0.026} &
 \tableheadershade
 Region & MAE & PSNR & SSIM & Dice & SAM & Reg & Uncertainty \\
 \midrule
-MRI-to-CT/AB & \mstd{59.6}{9.6} & \mstd{30.0}{1.5} & \mstd{0.909}{0.023} & \mstd{0.591}{0.066} & \mstd{27.4}{4.0} & \mstd{0.526}{0.140} & \mstd{3718}{1310} \\
+MRI-to-CT/AB & \mstd{60.1}{9.2} & \mstd{30.0}{1.4} & \mstd{0.908}{0.022} & \mstd{0.588}{0.064} & \mstd{27.7}{4.0} & \mstd{0.524}{0.136} & \mstd{3708}{1259} \\
 MRI-to-CT/HN & \mstd{80.3}{12.5} & \mstd{28.4}{1.3} & \mstd{0.926}{0.029} & \mstd{0.641}{0.106} & \mstd{13.4}{2.1} & \mstd{0.423}{0.080} & \mstd{4427}{1329} \\
 MRI-to-CT/TH & \mstd{58.0}{11.3} & \mstd{31.2}{1.9} & \mstd{0.940}{0.019} & \mstd{0.635}{0.054} & \mstd{21.9}{4.6} & \mstd{0.436}{0.087} & \mstd{2484}{911} \\
-MRI-to-CT/brain & \mstd{80.8}{9.2} & \mstd{27.3}{1.0} & \mstd{0.913}{0.016} & \mstd{0.763}{0.108} & \mstd{13.4}{2.9} & \mstd{1.185}{0.132} & \mstd{6465}{1207} \\
-MRI-to-CT/pelvis & \mstd{47.4}{8.0} & \mstd{31.4}{1.5} & \mstd{0.902}{0.025} & \mstd{0.771}{0.102} & \mstd{27.0}{3.9} & \mstd{0.579}{0.096} & \mstd{3431}{706} \\
+MRI-to-CT/brain & \mstd{80.9}{9.1} & \mstd{27.3}{1.0} & \mstd{0.913}{0.015} & \mstd{0.762}{0.106} & \mstd{13.2}{2.9} & \mstd{1.195}{0.139} & \mstd{6457}{1186} \\
+MRI-to-CT/pelvis & \mstd{47.9}{8.2} & \mstd{31.3}{1.5} & \mstd{0.902}{0.024} & \mstd{0.763}{0.107} & \mstd{26.8}{4.0} & \mstd{0.572}{0.099} & \mstd{3452}{698} \\
 MRI-to-CT/CSIRO & \mstd{77.0}{10.5} & \mstd{27.6}{1.1} & \mstd{0.928}{0.016} & \mstd{0.775}{0.038} & \mstd{31.0}{4.2} & \mstd{0.274}{0.060} & \mstd{4973}{1034} \\
-MRI-to-CT/overall & \mstd{67.7}{16.4} & \mstd{29.2}{2.2} & \mstd{0.920}{0.025} & \mstd{0.701}{0.112} & \mstd{22.2}{7.9} & \mstd{0.585}{0.324} & \mstd{4319}{1709} \\
+MRI-to-CT/overall & \mstd{67.7}{16.3} & \mstd{29.2}{2.2} & \mstd{0.919}{0.025} & \mstd{0.698}{0.112} & \mstd{22.2}{7.9} & \mstd{0.589}{0.328} & \mstd{4320}{1696} \\
 \midrule
 CBCT-to-CT/AB & \mstd{56.8}{14.3} & \mstd{31.1}{2.4} & \mstd{0.927}{0.024} & \mstd{0.665}{0.084} & \mstd{18.9}{4.8} & \mstd{0.013}{0.004} & \mstd{1978}{805} \\
 CBCT-to-CT/HN & \mstd{68.0}{15.6} & \mstd{29.9}{2.2} & \mstd{0.947}{0.021} & \mstd{0.707}{0.076} & \mstd{10.4}{1.6} & \mstd{0.012}{0.004} & \mstd{1919}{514} \\
-CBCT-to-CT/TH & \mstd{58.4}{14.7} & \mstd{31.8}{2.6} & \mstd{0.926}{0.018} & \mstd{0.726}{0.061} & \mstd{17.8}{4.5} & \mstd{0.015}{0.004} & \mstd{1860}{555} \\
-CBCT-to-CT/brain & \mstd{40.6}{6.2} & \mstd{33.5}{1.5} & \mstd{0.968}{0.007} & \mstd{0.907}{0.070} & \mstd{9.4}{2.0} & \mstd{0.028}{0.011} & \mstd{1804}{583} \\
-CBCT-to-CT/pelvis & \mstd{34.6}{7.7} & \mstd{35.2}{2.5} & \mstd{0.925}{0.022} & \mstd{0.828}{0.081} & \mstd{22.7}{4.8} & \mstd{0.023}{0.008} & \mstd{1282}{464} \\
-CBCT-to-CT/overall & \mstd{54.2}{17.5} & \mstd{31.9}{2.9} & \mstd{0.938}{0.025} & \mstd{0.752}{0.113} & \mstd{15.4}{6.1} & \mstd{0.017}{0.009} & \mstd{1812}{643} \\
+CBCT-to-CT/TH & \mstd{57.5}{15.0} & \mstd{31.9}{2.6} & \mstd{0.926}{0.019} & \mstd{0.713}{0.074} & \mstd{17.3}{4.5} & \mstd{0.015}{0.004} & \mstd{1815}{561} \\
+CBCT-to-CT/brain & \mstd{41.2}{6.4} & \mstd{33.4}{1.5} & \mstd{0.968}{0.007} & \mstd{0.911}{0.069} & \mstd{9.2}{2.1} & \mstd{0.028}{0.011} & \mstd{1835}{570} \\
+CBCT-to-CT/pelvis & \mstd{35.2}{8.0} & \mstd{35.0}{2.5} & \mstd{0.924}{0.023} & \mstd{0.826}{0.079} & \mstd{22.6}{4.8} & \mstd{0.022}{0.008} & \mstd{1286}{453} \\
+CBCT-to-CT/overall & \mstd{54.0}{17.3} & \mstd{31.9}{2.9} & \mstd{0.938}{0.025} & \mstd{0.751}{0.116} & \mstd{15.3}{6.1} & \mstd{0.017}{0.009} & \mstd{1805}{638} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -397,13 +397,13 @@ CBCT-to-CT/overall & \mstd{54.2}{17.5} & \mstd{31.9}{2.9} & \mstd{0.938}{0.025} 
 \tableheadershade
 Setting & Contrast & MAE & PSNR & SSIM & Dice & SAM & Reg & Uncertainty \\
 \midrule
-Direct & IN & \mstd{85.3}{6.2} & \mstd{27.9}{0.6} & \mstd{0.973}{0.003} & \mstd{0.568}{0.046} & \mstd{19.0}{1.6} & \mstd{0.180}{0.028} & \mstd{10366}{2316} \\
+Direct & IN & \mstd{85.2}{5.9} & \mstd{27.9}{0.6} & \mstd{0.973}{0.003} & \mstd{0.570}{0.045} & \mstd{19.0}{1.6} & \mstd{0.178}{0.028} & \mstd{10280}{2260} \\
 Direct & OUT & \mstd{115.5}{14.0} & \mstd{25.6}{0.9} & \mstd{0.962}{0.004} & \mstd{0.350}{0.070} & \mstd{20.8}{1.5} & \mstd{0.204}{0.027} & \mstd{23967}{5193} \\
-Direct & Overall & \mstd{100.9}{18.7} & \mstd{26.7}{1.4} & \mstd{0.968}{0.007} & \mstd{0.455}{0.124} & \mstd{19.9}{1.8} & \mstd{0.193}{0.030} & \mstd{17401}{7920} \\
+Direct & Overall & \mstd{100.4}{18.6} & \mstd{26.7}{1.4} & \mstd{0.968}{0.007} & \mstd{0.460}{0.125} & \mstd{19.9}{1.8} & \mstd{0.191}{0.031} & \mstd{17123}{7929} \\
 \midrule
 Fine-tuned & IN & \mstd{60.0}{5.4} & \mstd{30.7}{0.9} & \mstd{0.983}{0.002} & \mstd{0.662}{0.025} & \mstd{13.1}{1.1} & \mstd{0.198}{0.028} & \mstd{3031}{488} \\
 Fine-tuned & OUT & \mstd{64.4}{6.1} & \mstd{30.2}{0.9} & \mstd{0.981}{0.002} & \mstd{0.648}{0.026} & \mstd{13.4}{1.1} & \mstd{0.209}{0.029} & \mstd{3696}{598} \\
-Fine-tuned & Overall & \mstd{62.2}{6.2} & \mstd{30.5}{0.9} & \mstd{0.982}{0.002} & \mstd{0.655}{0.026} & \mstd{13.2}{1.1} & \mstd{0.203}{0.029} & \mstd{3363}{639} \\
+Fine-tuned & Overall & \mstd{62.2}{6.2} & \mstd{30.4}{0.9} & \mstd{0.982}{0.002} & \mstd{0.655}{0.026} & \mstd{13.2}{1.1} & \mstd{0.203}{0.029} & \mstd{3363}{639} \\
 \bottomrule
 \end{tabular}
 \end{table}

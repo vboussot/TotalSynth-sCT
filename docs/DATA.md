@@ -14,7 +14,7 @@ data/
 │   ├── synthrad2025/Task_{1,2}/{AB,HN,TH}/PATIENT/
 │   └── external/Task_1/CSIRO/PATIENT/
 └── splits/
-    └── task_{1,2}/{Validation,Validation_unified,Check}.txt
+    └── task_{1,2}/{Validation,Check}.txt
 ```
 
 `data/processed` is the folder of the same name in RegistrationBias-sCT, linked
@@ -48,7 +48,6 @@ make pairs
 |---|---|
 | `task_1/Validation.txt` | 140: the held-out cases of Task 1 (AB 22, HN 21, TH 23, brain 27, pelvis 23, CSIRO 24) |
 | `task_2/Validation.txt` | 150: the held-out cases of Task 2 (AB 32, HN 37, TH 34, brain 26, pelvis 21) |
-| `task_{1,2}/Validation_unified.txt` | 136 and 144: the held-out cases of the unified model, subsets of the above |
 | `task_{1,2}/Check.txt` | two cases per region, for `--check` |
 | `task_1/MultimodalHC.txt` | the 15 MTBD subjects of Table 6 |
 
