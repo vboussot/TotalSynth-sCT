@@ -42,7 +42,7 @@ def test_held_out_lists() -> None:
 
 
 def test_metric_bundle_is_complete() -> None:
-    assert len(list((ROOT / "results" / "raw" / "Evaluations").glob("**/Metric_TRAIN.json"))) == 102
+    assert len(list((ROOT / "results" / "raw" / "Evaluations").glob("**/Metric_TRAIN.json"))) == 108
 
 
 def test_result_json_is_strictly_valid() -> None:
@@ -63,7 +63,7 @@ def test_executable_files_have_no_cluster_paths() -> None:
 
 
 def test_script_tables_match_the_paper() -> None:
-    """Every cell the scripts build from the paper's metrics is the paper's, to the last printed digit."""
+    """Every cell of Tables 2 to 6 is built from the metrics and is the paper's, to the last printed digit."""
     outputs = {2: "table_02_summary.tex", 3: "table_03_mri.tex", 4: "table_04_cbct.tex",
                5: "table_05_unified.tex", 6: "table_06_multimodal_hc.tex"}
     for number, output_name in outputs.items():
@@ -79,7 +79,7 @@ def test_script_tables_match_the_paper() -> None:
                         step = 10 ** -len(reference.partition(".")[2])
                         assert abs(float(value) - float(reference)) <= step * 1.001, (number, reported_row.split("&")[0])
                     compared += 1
-        assert compared >= {2: 18, 3: 28, 4: 36, 5: 91, 6: 42}[number], number
+        assert compared == {2: 24, 3: 49, 4: 42, 5: 91, 6: 42}[number], number
 
 
 def test_documented_files_exist() -> None:

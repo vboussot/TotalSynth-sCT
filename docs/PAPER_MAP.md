@@ -59,12 +59,6 @@ others, it is in `tables/` as LaTeX, written from the paper source by
 
 ## Notes
 
-### Tables 3 and 4
-
-`results/raw` has no `CV_PERCEPTUAL` file for the dedicated MRI-to-CT model and
-no Reg value for the dedicated CBCT-to-CT model: these cells are empty in
-`tables/from_metrics/`, and step 4 writes them.
-
 ### Table 6
 
 The rows are computed on the in-phase and the out-of-phase image of each MTBD

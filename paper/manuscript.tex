@@ -193,7 +193,7 @@ d_{\mathrm{SAM}}(\hat{y},y) = \sum_{l}\sum_{c} \alpha_{l,c}\bigl| \phi_{l,c}(\ha
 
 where $\phi_{l,c}$ represents feature channel $c$ at intermediate level $l$, and $\alpha_{l,c}\geq0$ denotes channel weights calibrated to favor anatomical correspondence over voxel-wise intensity agreement. The metric was restricted to two intermediate feature levels, with weights calibrated so that a registration-deformed CT control remained closer to the reference CT than an sCT trained using voxel-wise supervision alone.
 
-Anatomical preservation relative to the input image was also evaluated using a registration-based metric (Reg) derived from the IMPACT framework \cite{boussot2025impact}. This metric compares features extracted from the sCT and the source MRI or CBCT using the frozen TotalSegmentator CT 3 mm encoder on $128^3$ patches. Unlike reference-based metrics, Reg assesses anatomical consistency between the synthesized image and its original input, helping identify potential geometric discrepancies introduced during synthesis. Lower values indicate better anatomical correspondence.
+Anatomical preservation relative to the input image was also evaluated using a registration-based metric (Reg) derived from the IMPACT framework \cite{boussot2025impact}. This metric compares features extracted from the sCT and the source image on $128^3$ patches, using a frozen segmentation encoder: TotalSegmentator CT 3 mm for CBCT inputs and MRSeg for MRI inputs. Unlike reference-based metrics, Reg assesses anatomical consistency between the synthesized image and its original input, helping identify potential geometric discrepancies introduced during synthesis. Lower values indicate better anatomical correspondence.
 
 Finally, predictive uncertainty was estimated from the variability of the five ensemble models and flipped test-time augmentations. Uncertainty was quantified as the voxel-wise variance of the 15 predictions, averaged within the body mask like the other metrics and expressed in HU$^2$. This measure reflects disagreement between model predictions but does not account for all potential sources of uncertainty.
 
@@ -320,14 +320,14 @@ The registration-derived SynthRAD2023 and SynthRAD2025 supervision, deformation 
 \tableheadershade
 Region & MAE & PSNR & SSIM & Dice & SAM & Reg & Uncertainty \\
 \midrule
-AB ($n=22$) & \mstd{60.1}{9.4} & \mstd{30.0}{1.5} & \mstd{0.908}{0.022} & \mstd{0.598}{0.070} & \mstd{27.4}{4.2} & \mstd{0.511}{0.117} & \mstd{3934}{1182} \\
-HN ($n=21$) & \mstd{80.9}{13.1} & \mstd{28.4}{1.4} & \mstd{0.925}{0.030} & \mstd{0.644}{0.106} & \mstd{13.4}{2.1} & \mstd{0.435}{0.066} & \mstd{4921}{1478} \\
-TH ($n=23$) & \mstd{58.5}{11.2} & \mstd{31.2}{1.9} & \mstd{0.940}{0.019} & \mstd{0.645}{0.051} & \mstd{21.6}{4.2} & \mstd{0.466}{0.089} & \mstd{2810}{1126} \\
-brain ($n=27$) & \mstd{79.7}{8.6} & \mstd{27.4}{0.9} & \mstd{0.915}{0.015} & \mstd{0.751}{0.096} & \mstd{13.2}{2.6} & \mstd{1.199}{0.138} & \mstd{7560}{1312} \\
-pelvis ($n=23$) & \mstd{48.2}{8.3} & \mstd{31.3}{1.4} & \mstd{0.901}{0.025} & \mstd{0.756}{0.108} & \mstd{25.9}{3.6} & \mstd{0.574}{0.094} & \mstd{3748}{928} \\
-CSIRO ($n=24$) & \mstd{76.0}{10.1} & \mstd{27.7}{1.0} & \mstd{0.929}{0.016} & \mstd{0.774}{0.035} & \mstd{30.9}{3.9} & \mstd{0.434}{0.054} & \mstd{4869}{1074} \\
+AB ($n=22$) & \mstd{60.1}{9.4} & \mstd{30.0}{1.5} & \mstd{0.908}{0.022} & \mstd{0.598}{0.070} & \mstd{26.5}{4.2} & \mstd{0.438}{0.144} & \mstd{3934}{1182} \\
+HN ($n=21$) & \mstd{80.9}{13.1} & \mstd{28.4}{1.4} & \mstd{0.925}{0.030} & \mstd{0.644}{0.106} & \mstd{11.7}{2.2} & \mstd{0.362}{0.086} & \mstd{4921}{1478} \\
+TH ($n=23$) & \mstd{58.5}{11.2} & \mstd{31.2}{1.9} & \mstd{0.940}{0.019} & \mstd{0.645}{0.051} & \mstd{21.2}{4.1} & \mstd{0.329}{0.103} & \mstd{2810}{1126} \\
+brain ($n=27$) & \mstd{79.7}{8.6} & \mstd{27.4}{0.9} & \mstd{0.915}{0.015} & \mstd{0.751}{0.096} & \mstd{11.3}{1.9} & \mstd{1.197}{0.138} & \mstd{7560}{1312} \\
+pelvis ($n=23$) & \mstd{48.2}{8.3} & \mstd{31.3}{1.4} & \mstd{0.901}{0.025} & \mstd{0.756}{0.108} & \mstd{23.9}{3.5} & \mstd{0.572}{0.094} & \mstd{3748}{928} \\
+CSIRO ($n=24$) & \mstd{76.0}{10.1} & \mstd{27.7}{1.0} & \mstd{0.929}{0.016} & \mstd{0.774}{0.035} & \mstd{30.9}{3.9} & \mstd{0.238}{0.052} & \mstd{4869}{1074} \\
 \midrule
-overall ($n=140$) & \mstd{67.5}{16.0} & \mstd{29.3}{2.1} & \mstd{0.920}{0.025} & \mstd{0.698}{0.106} & \mstd{22.0}{7.7} & \mstd{0.622}{0.303} & \mstd{4726}{1961} \\
+overall ($n=140$) & \mstd{67.5}{16.0} & \mstd{29.3}{2.1} & \mstd{0.920}{0.025} & \mstd{0.698}{0.106} & \mstd{20.8}{8.1} & \mstd{0.543}{0.353} & \mstd{4726}{1961} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -344,13 +344,13 @@ overall ($n=140$) & \mstd{67.5}{16.0} & \mstd{29.3}{2.1} & \mstd{0.920}{0.025} &
 \tableheadershade
 Region & MAE & PSNR & SSIM & Dice & SAM & Reg & Uncertainty \\
 \midrule
-AB ($n=32$) & \mstd{57.2}{15.0} & \mstd{31.1}{2.4} & \mstd{0.926}{0.023} & \mstd{0.673}{0.086} & \mstd{17.7}{4.5} & \mstd{1.049}{0.016} & \mstd{2503}{799} \\
-HN ($n=37$) & \mstd{67.5}{15.8} & \mstd{30.0}{2.2} & \mstd{0.946}{0.021} & \mstd{0.717}{0.075} & \mstd{8.9}{1.5} & \mstd{1.052}{0.036} & \mstd{2643}{761} \\
-TH ($n=34$) & \mstd{57.3}{15.3} & \mstd{32.0}{2.7} & \mstd{0.928}{0.019} & \mstd{0.724}{0.075} & \mstd{16.2}{4.5} & \mstd{1.045}{0.021} & \mstd{2286}{746} \\
-brain ($n=26$) & \mstd{39.4}{6.1} & \mstd{34.0}{1.6} & \mstd{0.970}{0.007} & \mstd{0.905}{0.071} & \mstd{7.2}{1.0} & \mstd{1.013}{0.002} & \mstd{1905}{485} \\
-pelvis ($n=21$) & \mstd{34.8}{8.3} & \mstd{35.1}{2.5} & \mstd{0.924}{0.023} & \mstd{0.835}{0.078} & \mstd{20.1}{4.6} & \mstd{1.023}{0.005} & \mstd{1478}{657} \\
+AB ($n=32$) & \mstd{57.2}{15.0} & \mstd{31.1}{2.4} & \mstd{0.926}{0.023} & \mstd{0.673}{0.086} & \mstd{17.7}{4.5} & \mstd{0.014}{0.004} & \mstd{2503}{799} \\
+HN ($n=37$) & \mstd{67.5}{15.8} & \mstd{30.0}{2.2} & \mstd{0.946}{0.021} & \mstd{0.717}{0.075} & \mstd{8.9}{1.5} & \mstd{0.012}{0.004} & \mstd{2643}{761} \\
+TH ($n=34$) & \mstd{57.3}{15.3} & \mstd{32.0}{2.7} & \mstd{0.928}{0.019} & \mstd{0.724}{0.075} & \mstd{16.2}{4.5} & \mstd{0.015}{0.004} & \mstd{2286}{746} \\
+brain ($n=26$) & \mstd{39.4}{6.1} & \mstd{34.0}{1.6} & \mstd{0.970}{0.007} & \mstd{0.905}{0.071} & \mstd{7.2}{1.0} & \mstd{0.029}{0.010} & \mstd{1905}{485} \\
+pelvis ($n=21$) & \mstd{34.8}{8.3} & \mstd{35.1}{2.5} & \mstd{0.924}{0.023} & \mstd{0.835}{0.078} & \mstd{20.1}{4.7} & \mstd{0.023}{0.008} & \mstd{1478}{657} \\
 \midrule
-overall ($n=150$) & \mstd{53.5}{17.8} & \mstd{32.1}{2.9} & \mstd{0.939}{0.026} & \mstd{0.758}{0.113} & \mstd{13.7}{6.0} & \mstd{1.039}{0.027} & \mstd{2241}{814} \\
+overall ($n=150$) & \mstd{53.5}{17.8} & \mstd{32.1}{2.9} & \mstd{0.939}{0.026} & \mstd{0.758}{0.113} & \mstd{13.7}{6.0} & \mstd{0.018}{0.009} & \mstd{2241}{814} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -366,20 +366,20 @@ overall ($n=150$) & \mstd{53.5}{17.8} & \mstd{32.1}{2.9} & \mstd{0.939}{0.026} &
 \tableheadershade
 Region & MAE & PSNR & SSIM & Dice & SAM & Reg & Uncertainty \\
 \midrule
-MRI-to-CT/AB & \mstd{60.1}{9.2} & \mstd{30.0}{1.4} & \mstd{0.908}{0.022} & \mstd{0.588}{0.064} & \mstd{27.7}{4.0} & \mstd{0.524}{0.136} & \mstd{3708}{1259} \\
-MRI-to-CT/HN & \mstd{80.3}{12.5} & \mstd{28.4}{1.3} & \mstd{0.926}{0.029} & \mstd{0.641}{0.106} & \mstd{13.4}{2.1} & \mstd{0.423}{0.080} & \mstd{4427}{1329} \\
-MRI-to-CT/TH & \mstd{58.0}{11.3} & \mstd{31.2}{1.9} & \mstd{0.940}{0.019} & \mstd{0.635}{0.054} & \mstd{21.9}{4.6} & \mstd{0.436}{0.087} & \mstd{2484}{911} \\
-MRI-to-CT/brain & \mstd{80.9}{9.1} & \mstd{27.3}{1.0} & \mstd{0.913}{0.015} & \mstd{0.762}{0.106} & \mstd{13.2}{2.9} & \mstd{1.195}{0.139} & \mstd{6457}{1186} \\
-MRI-to-CT/pelvis & \mstd{47.9}{8.2} & \mstd{31.3}{1.5} & \mstd{0.902}{0.024} & \mstd{0.763}{0.107} & \mstd{26.8}{4.0} & \mstd{0.572}{0.099} & \mstd{3452}{698} \\
-MRI-to-CT/CSIRO & \mstd{77.0}{10.5} & \mstd{27.6}{1.1} & \mstd{0.928}{0.016} & \mstd{0.775}{0.038} & \mstd{31.0}{4.2} & \mstd{0.274}{0.060} & \mstd{4973}{1034} \\
-MRI-to-CT/overall & \mstd{67.7}{16.3} & \mstd{29.2}{2.2} & \mstd{0.919}{0.025} & \mstd{0.698}{0.112} & \mstd{22.2}{7.9} & \mstd{0.589}{0.328} & \mstd{4320}{1696} \\
+MRI-to-CT/AB & \mstd{60.1}{9.2} & \mstd{30.0}{1.4} & \mstd{0.908}{0.022} & \mstd{0.588}{0.064} & \mstd{27.0}{4.2} & \mstd{0.440}{0.146} & \mstd{3708}{1259} \\
+MRI-to-CT/HN & \mstd{80.3}{12.5} & \mstd{28.4}{1.3} & \mstd{0.926}{0.029} & \mstd{0.641}{0.106} & \mstd{11.8}{2.3} & \mstd{0.362}{0.086} & \mstd{4427}{1329} \\
+MRI-to-CT/TH & \mstd{58.0}{11.3} & \mstd{31.2}{1.9} & \mstd{0.940}{0.019} & \mstd{0.635}{0.054} & \mstd{21.4}{4.4} & \mstd{0.330}{0.105} & \mstd{2484}{911} \\
+MRI-to-CT/brain & \mstd{80.9}{9.1} & \mstd{27.3}{1.0} & \mstd{0.913}{0.015} & \mstd{0.762}{0.106} & \mstd{11.5}{2.0} & \mstd{1.190}{0.140} & \mstd{6457}{1186} \\
+MRI-to-CT/pelvis & \mstd{47.9}{8.2} & \mstd{31.3}{1.5} & \mstd{0.902}{0.024} & \mstd{0.763}{0.107} & \mstd{24.8}{3.8} & \mstd{0.570}{0.097} & \mstd{3452}{698} \\
+MRI-to-CT/CSIRO & \mstd{77.0}{10.5} & \mstd{27.6}{1.1} & \mstd{0.928}{0.016} & \mstd{0.775}{0.038} & \mstd{31.0}{4.2} & \mstd{0.236}{0.052} & \mstd{4973}{1034} \\
+MRI-to-CT/overall & \mstd{67.7}{16.3} & \mstd{29.2}{2.2} & \mstd{0.919}{0.025} & \mstd{0.698}{0.112} & \mstd{21.1}{8.3} & \mstd{0.541}{0.351} & \mstd{4320}{1696} \\
 \midrule
-CBCT-to-CT/AB & \mstd{56.8}{14.3} & \mstd{31.1}{2.4} & \mstd{0.927}{0.024} & \mstd{0.665}{0.084} & \mstd{18.9}{4.8} & \mstd{0.013}{0.004} & \mstd{1978}{805} \\
-CBCT-to-CT/HN & \mstd{68.0}{15.6} & \mstd{29.9}{2.2} & \mstd{0.947}{0.021} & \mstd{0.707}{0.076} & \mstd{10.4}{1.6} & \mstd{0.012}{0.004} & \mstd{1919}{514} \\
-CBCT-to-CT/TH & \mstd{57.5}{15.0} & \mstd{31.9}{2.6} & \mstd{0.926}{0.019} & \mstd{0.713}{0.074} & \mstd{17.3}{4.5} & \mstd{0.015}{0.004} & \mstd{1815}{561} \\
-CBCT-to-CT/brain & \mstd{41.2}{6.4} & \mstd{33.4}{1.5} & \mstd{0.968}{0.007} & \mstd{0.911}{0.069} & \mstd{9.2}{2.1} & \mstd{0.028}{0.011} & \mstd{1835}{570} \\
-CBCT-to-CT/pelvis & \mstd{35.2}{8.0} & \mstd{35.0}{2.5} & \mstd{0.924}{0.023} & \mstd{0.826}{0.079} & \mstd{22.6}{4.8} & \mstd{0.022}{0.008} & \mstd{1286}{453} \\
-CBCT-to-CT/overall & \mstd{54.0}{17.3} & \mstd{31.9}{2.9} & \mstd{0.938}{0.025} & \mstd{0.751}{0.116} & \mstd{15.3}{6.1} & \mstd{0.017}{0.009} & \mstd{1805}{638} \\
+CBCT-to-CT/AB & \mstd{56.8}{14.3} & \mstd{31.1}{2.4} & \mstd{0.927}{0.024} & \mstd{0.665}{0.084} & \mstd{18.1}{4.7} & \mstd{0.013}{0.004} & \mstd{1978}{805} \\
+CBCT-to-CT/HN & \mstd{68.0}{15.6} & \mstd{29.9}{2.2} & \mstd{0.947}{0.021} & \mstd{0.707}{0.076} & \mstd{9.1}{1.5} & \mstd{0.012}{0.004} & \mstd{1919}{514} \\
+CBCT-to-CT/TH & \mstd{57.5}{15.0} & \mstd{31.9}{2.6} & \mstd{0.926}{0.019} & \mstd{0.713}{0.074} & \mstd{16.6}{4.5} & \mstd{0.015}{0.004} & \mstd{1815}{561} \\
+CBCT-to-CT/brain & \mstd{41.2}{6.4} & \mstd{33.4}{1.5} & \mstd{0.968}{0.007} & \mstd{0.911}{0.069} & \mstd{7.7}{1.3} & \mstd{0.028}{0.011} & \mstd{1835}{570} \\
+CBCT-to-CT/pelvis & \mstd{35.2}{8.0} & \mstd{35.0}{2.5} & \mstd{0.924}{0.023} & \mstd{0.826}{0.079} & \mstd{21.1}{4.7} & \mstd{0.022}{0.008} & \mstd{1286}{453} \\
+CBCT-to-CT/overall & \mstd{54.0}{17.3} & \mstd{31.9}{2.9} & \mstd{0.938}{0.025} & \mstd{0.751}{0.116} & \mstd{14.2}{6.2} & \mstd{0.017}{0.009} & \mstd{1805}{638} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -397,13 +397,13 @@ CBCT-to-CT/overall & \mstd{54.0}{17.3} & \mstd{31.9}{2.9} & \mstd{0.938}{0.025} 
 \tableheadershade
 Setting & Contrast & MAE & PSNR & SSIM & Dice & SAM & Reg & Uncertainty \\
 \midrule
-Direct & IN & \mstd{85.2}{5.9} & \mstd{27.9}{0.6} & \mstd{0.973}{0.003} & \mstd{0.570}{0.045} & \mstd{19.0}{1.6} & \mstd{0.178}{0.028} & \mstd{10280}{2260} \\
-Direct & OUT & \mstd{115.5}{14.0} & \mstd{25.6}{0.9} & \mstd{0.962}{0.004} & \mstd{0.350}{0.070} & \mstd{20.8}{1.5} & \mstd{0.204}{0.027} & \mstd{23967}{5193} \\
-Direct & Overall & \mstd{100.4}{18.6} & \mstd{26.7}{1.4} & \mstd{0.968}{0.007} & \mstd{0.460}{0.125} & \mstd{19.9}{1.8} & \mstd{0.191}{0.031} & \mstd{17123}{7929} \\
+Direct & IN & \mstd{85.2}{5.9} & \mstd{27.9}{0.6} & \mstd{0.973}{0.003} & \mstd{0.570}{0.045} & \mstd{18.9}{1.6} & \mstd{0.137}{0.018} & \mstd{10280}{2260} \\
+Direct & OUT & \mstd{115.5}{14.0} & \mstd{25.6}{0.9} & \mstd{0.962}{0.004} & \mstd{0.350}{0.070} & \mstd{20.8}{1.5} & \mstd{0.159}{0.018} & \mstd{23967}{5193} \\
+Direct & Overall & \mstd{100.4}{18.6} & \mstd{26.7}{1.4} & \mstd{0.968}{0.007} & \mstd{0.460}{0.125} & \mstd{19.9}{1.8} & \mstd{0.148}{0.021} & \mstd{17123}{7929} \\
 \midrule
-Fine-tuned & IN & \mstd{60.0}{5.4} & \mstd{30.7}{0.9} & \mstd{0.983}{0.002} & \mstd{0.662}{0.025} & \mstd{13.1}{1.1} & \mstd{0.198}{0.028} & \mstd{3031}{488} \\
-Fine-tuned & OUT & \mstd{64.4}{6.1} & \mstd{30.2}{0.9} & \mstd{0.981}{0.002} & \mstd{0.648}{0.026} & \mstd{13.4}{1.1} & \mstd{0.209}{0.029} & \mstd{3696}{598} \\
-Fine-tuned & Overall & \mstd{62.2}{6.2} & \mstd{30.4}{0.9} & \mstd{0.982}{0.002} & \mstd{0.655}{0.026} & \mstd{13.2}{1.1} & \mstd{0.203}{0.029} & \mstd{3363}{639} \\
+Fine-tuned & IN & \mstd{60.0}{5.4} & \mstd{30.7}{0.9} & \mstd{0.983}{0.002} & \mstd{0.662}{0.025} & \mstd{13.1}{1.1} & \mstd{0.144}{0.019} & \mstd{3031}{488} \\
+Fine-tuned & OUT & \mstd{64.4}{6.1} & \mstd{30.2}{0.9} & \mstd{0.981}{0.002} & \mstd{0.648}{0.026} & \mstd{13.3}{1.1} & \mstd{0.160}{0.021} & \mstd{3696}{598} \\
+Fine-tuned & Overall & \mstd{62.2}{6.2} & \mstd{30.4}{0.9} & \mstd{0.982}{0.002} & \mstd{0.655}{0.026} & \mstd{13.2}{1.1} & \mstd{0.152}{0.021} & \mstd{3363}{639} \\
 \bottomrule
 \end{tabular}
 \end{table}

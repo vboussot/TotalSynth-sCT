@@ -3,7 +3,7 @@
 | Path | Content |
 |---|---|
 | `tables/table_NN_*.tex` | the 6 tables of the paper, written from `paper/manuscript.tex` by `scripts/tables/published_tables.py` |
-| `results/raw/Evaluations/` | 102 `Metric_TRAIN.json` files: one per model branch and region, with the value of every metric for every patient |
+| `results/raw/Evaluations/` | 108 `Metric_TRAIN.json` files: one per model branch and region, with the value of every metric for every patient |
 | `tables/from_metrics/` | Tables 2 to 6 built from those files by `scripts/tables/` |
 
 ## Metric files
