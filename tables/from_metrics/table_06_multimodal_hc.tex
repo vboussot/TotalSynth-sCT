@@ -1,0 +1,19 @@
+\begin{table}[!ht]
+\centering
+\caption{Multimodal-HC external evaluation before and after fine-tuning. Values report mean $\pm$ standard deviation.}
+\label{tab:multimodal_hc_external_finetune}
+\scriptsize
+\begin{tabular}{@{}llccccccc@{}}
+\toprule
+Setting & Contrast & MAE & PSNR & SSIM & Dice & SAM & Reg & Uncertainty \\
+\midrule
+Direct & IN & \mstd{85.27}{6.15} & \mstd{27.89}{0.61} & \mstd{0.973}{0.003} & \mstd{0.568}{0.046} & \mstd{18.991}{1.608} & \mstd{0.180}{0.028} & \mstd{917.41}{115.51} \\
+Direct & OUT & \mstd{115.50}{14.04} & \mstd{25.56}{0.91} & \mstd{0.962}{0.004} & \mstd{0.350}{0.070} & \mstd{20.804}{1.503} & \mstd{0.204}{0.027} & \mstd{2132.74}{263.72} \\
+Direct & Overall & \mstd{100.91}{18.67} & \mstd{26.69}{1.40} & \mstd{0.968}{0.007} & \mstd{0.455}{0.124} & \mstd{19.929}{1.799} & \mstd{0.193}{0.030} & \mstd{1546.03}{641.28} \\
+\midrule
+Fine-tuned & IN & \mstd{60.00}{5.43} & \mstd{30.73}{0.87} & \mstd{0.983}{0.002} & \mstd{0.662}{0.025} & \mstd{13.113}{1.069} & \mstd{0.198}{0.028} & \mstd{272.78}{33.12} \\
+Fine-tuned & OUT & \mstd{64.43}{6.12} & \mstd{30.16}{0.87} & \mstd{0.981}{0.002} & \mstd{0.648}{0.026} & \mstd{13.354}{1.063} & \mstd{0.209}{0.029} & \mstd{332.65}{40.43} \\
+Fine-tuned & Overall & \mstd{62.21}{6.19} & \mstd{30.45}{0.92} & \mstd{0.982}{0.002} & \mstd{0.655}{0.026} & \mstd{13.234}{1.073} & \mstd{0.203}{0.029} & \mstd{302.72}{47.56} \\
+\bottomrule
+\end{tabular}
+\end{table}

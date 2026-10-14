@@ -1,0 +1,22 @@
+\begin{table}[!ht]
+\centering
+\caption{Evaluation of the released MRI-to-CT model by anatomical region. Values report mean $\pm$ standard deviation. Case counts refer to the image-domain and Dice evaluation.}
+\label{tab:mri_to_ct_release_cv_metrics}
+\scriptsize
+\metricstablesetup
+\begin{tabular}{@{}lccccccc@{}}
+\toprule
+\tableheadershade
+Region & MAE & PSNR & SSIM & Dice & SAM & Reg & Uncertainty \\
+\midrule
+AB ($n=22$) & \mstd{60.10}{9.42} & \mstd{30.01}{1.47} & \mstd{0.908}{0.022} & \mstd{0.598}{0.070} & \mstd{27.405}{4.156} & \mstd{0.511}{0.117} & \mstd{1543.81}{580.52} \\
+HN ($n=21$) & \mstd{80.89}{13.12} & \mstd{28.44}{1.35} & \mstd{0.925}{0.030} & \mstd{0.645}{0.106} & \mstd{13.412}{2.108} & \mstd{0.435}{0.066} & \mstd{1308.83}{512.26} \\
+TH ($n=23$) & \mstd{58.45}{11.20} & \mstd{31.21}{1.86} & \mstd{0.940}{0.019} & \mstd{0.645}{0.051} & \mstd{21.638}{4.232} & \mstd{0.466}{0.089} & \mstd{751.61}{262.12} \\
+brain ($n=27$) & \mstd{79.71}{8.64} & \mstd{27.44}{0.92} & \mstd{0.915}{0.015} & \mstd{0.751}{0.096} & \mstd{13.209}{2.612} & \mstd{1.199}{0.138} & \mstd{3402.08}{633.51} \\
+pelvis ($n=23$) & \mstd{48.16}{8.30} & \mstd{31.28}{1.42} & \mstd{0.901}{0.025} & \mstd{0.756}{0.108} & \mstd{25.949}{3.617} & \mstd{0.574}{0.094} & \mstd{2348.75}{648.73} \\
+CSIRO ($n=24$)  & \mstd{75.99}{10.13} & \mstd{27.67}{1.02} & \mstd{0.929}{0.016} & \mstd{0.774}{0.035} & \mstd{30.898}{3.947} & \mstd{0.434}{0.054} & \mstd{1272.28}{153.55} \\
+\midrule
+overall ($n=140$) & \mstd{67.49}{15.97} & \mstd{29.28}{2.10} & \mstd{0.920}{0.025} & \mstd{0.698}{0.106} & \mstd{21.981}{7.692} & \mstd{0.622}{0.303} & \mstd{1822.49}{1035.84} \\
+\bottomrule
+\end{tabular}
+\end{table}

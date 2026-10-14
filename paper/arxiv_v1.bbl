@@ -1,0 +1,158 @@
+\begin{thebibliography}{10}
+
+\bibitem{bahloul2024advancements}
+Mohamed~A Bahloul, Saima Jabeen, Sara Benoumhani, Habib~Abdulmohsen Alsaleh,
+  Zehor Belkhatir, and Areej Al-Wabil.
+\newblock Advancements in synthetic ct generation from mri: A review of
+  techniques, and trends in radiation therapy planning.
+\newblock {\em Journal of Applied Clinical Medical Physics}, 25(11):e14499,
+  2024.
+
+\bibitem{boulanger2021deep}
+M.~Boulanger, J.-C. Nunes, H.~Chourak, A.~Largent, S.~Tahri, O.~Acosta, et~al.
+\newblock Deep learning methods to generate synthetic ct from mri in
+  radiotherapy: A literature review.
+\newblock {\em Physica Medica}, 89:265--281, 2021.
+
+\bibitem{liu2023review}
+Hefei Liu, David Schaal, Heather Curry, Ryan Clark, Anthony Magliari, Patrick
+  Kupelian, Deepak Khuntia, and Sushil Beriwal.
+\newblock Review of cone beam computed tomography based online adaptive
+  radiotherapy: current trend and future direction.
+\newblock {\em Radiation Oncology}, 18(1):144, 2023.
+
+\bibitem{edmund2017review}
+Jens~M Edmund and Tufve Nyholm.
+\newblock A review of substitute ct generation for mri-only radiation therapy.
+\newblock {\em Radiation Oncology}, 12(1):28, 2017.
+
+\bibitem{spadea2021deep}
+Maria~Francesca Spadea, Matteo Maspero, Paolo Zaffino, and Joao Seco.
+\newblock Deep learning based synthetic-ct generation in radiotherapy and pet:
+  a review.
+\newblock {\em Medical physics}, 48(11):6537--6566, 2021.
+
+\bibitem{huijben2024generating}
+Evi~MC Huijben, Maarten~L Terpstra, Suraj Pai, Adrian Thummerer, Peter
+  Koopmans, Manya Afonso, Maureen Van~Eijnatten, Oliver Gurney-Champion, Zeli
+  Chen, Yiwen Zhang, et~al.
+\newblock Generating synthetic computed tomography for radiotherapy:
+  Synthrad2023 challenge report.
+\newblock {\em Medical image analysis}, 97:103276, 2024.
+
+\bibitem{thummerer2025synthrad2025}
+Adrian Thummerer, Erik van~der Bijl, Arthur~Jr Galapon, Florian Kamp, Mark
+  Savenije, Christina Muijs, Shafak Aluwini, Roel~JHM Steenbakkers, Stephanie
+  Beuel, Martijn~PW Intven, et~al.
+\newblock Synthrad2025 grand challenge dataset: Generating synthetic cts for
+  radiotherapy from head to abdomen.
+\newblock {\em Medical physics}, 52(7):e17981, 2025.
+
+\bibitem{wasserthal2023totalsegmentator}
+Jakob Wasserthal, Hanns-Christian Breit, Manfred~T Meyer, Maurice Pradella,
+  Daniel Hinck, Alexander~W Sauter, Tobias Heye, Daniel~T Boll, Joshy Cyriac,
+  Shan Yang, et~al.
+\newblock Totalsegmentator: robust segmentation of 104 anatomic structures in
+  ct images.
+\newblock {\em Radiology: Artificial Intelligence}, 5(5):e230024, 2023.
+
+\bibitem{thummerer2023synthrad2023}
+Adrian Thummerer, Erik Van~der Bijl, Arthur Galapon~Jr, Joost~JC Verhoeff,
+  Johannes~A Langendijk, Stefan Both, Cornelis (Nico)~AT van~den Berg, and
+  Matteo Maspero.
+\newblock Synthrad2023 grand challenge dataset: Generating synthetic ct for
+  radiotherapy.
+\newblock {\em Medical physics}, 50(7):4664--4674, 2023.
+
+\bibitem{rogowski2026generating}
+Viktor Rogowski, Maarten~L Terpstra, Niklas Wahl, Florian Kamp, Erik van~der
+  Bijl, Arthur Galapon~Jr, Christopher Kurz, Bowen Xin, Zhengxiang Sun, Hollie
+  Min, et~al.
+\newblock Generating synthetic computed tomography for radiotherapy:
+  Synthrad2025 challenge report.
+\newblock {\em arXiv preprint arXiv:2605.13555}, 2026.
+
+\bibitem{nyholm2018mr}
+Tufve Nyholm, Stina Svensson, Sebastian Andersson, Joakim Jonsson, Maja Sohlin,
+  Christian Gustafsson, Elisabeth Kjell{\'e}n, Karin S{\"o}derstr{\"o}m, Per
+  Albertsson, Lennart Blomqvist, et~al.
+\newblock Mr and ct data with multiobserver delineations of organs in the
+  pelvic area—part of the gold atlas project.
+\newblock {\em Medical physics}, 45(3):1295--1300, 2018.
+
+\bibitem{dowling2015automatic}
+Jason~A Dowling, Jidi Sun, Peter Pichler, David Rivest-H{\'e}nault, Soumya
+  Ghose, Haylea Richardson, Chris Wratten, Jarad Martin, Jameen Arm, Leah Best,
+  et~al.
+\newblock Automatic substitute computed tomography generation and contouring
+  for magnetic resonance imaging (mri)-alone external beam radiation therapy
+  from standard mri sequences.
+\newblock {\em International Journal of Radiation Oncology* Biology* Physics},
+  93(5):1144--1153, 2015.
+
+\bibitem{hinge2026bicmac}
+Christian Hinge, Claes~N{\o}hr Ladefoged, Flemming~Littrup Andersen, Georg
+  Schramm, Kirsten Korsholm, and Ian Law.
+\newblock {BIC-MAC}: Big cross-modal attenuation correction challenge, 2026.
+\newblock MICCAI 2026 Challenge. Zenodo, doi:10.5281/zenodo.19731819.
+
+\bibitem{boussot2025impact}
+Valentin Boussot, C{\'e}dric H{\'e}mon, Jean-Claude Nunes, Jason Dowling, Simon
+  Rouz{\'e}, Caroline Lafond, Ana{\"\i}s Barateau, and Jean-Louis Dillenseger.
+\newblock Impact: a generic semantic loss for multimodal medical image
+  registration.
+\newblock {\em arXiv preprint arXiv:2503.24121}, 2025.
+
+\bibitem{zhou1807nested}
+Zongwei Zhou, Md~Mahfuzur~Rahman Siddiquee, Nima Tajbakhsh, and Jianming Liang.
+\newblock {UNet++}: A nested {U-Net} architecture for medical image
+  segmentation.
+\newblock {\em arXiv preprint arXiv:1807.10165}, 2018.
+
+\bibitem{he2016deep}
+Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun.
+\newblock Deep residual learning for image recognition.
+\newblock In {\em Proceedings of the IEEE Conference on Computer Vision and
+  Pattern Recognition}, pages 770--778, 2016.
+
+\bibitem{ravi2025sam2}
+Nikhila Ravi, Valentin Gabeur, Yuan-Ting Hu, Ronghang Hu, Chaitanya Ryali,
+  Tengyu Ma, Haitham Khedr, Roman R{\"a}dle, Chloe Rolland, Laura Gustafson,
+  Eric Mintun, Junting Pan, Kalyan~Vasudev Alwala, Nicolas Carion, Chao-Yuan
+  Wu, Ross Girshick, Piotr Doll{\'a}r, and Christoph Feichtenhofer.
+\newblock Sam 2: Segment anything in images and videos.
+\newblock In {\em International Conference on Learning Representations}, 2025.
+
+\bibitem{fedorov2012slicer}
+Andrey Fedorov, Reinhard Beichel, Jayashree Kalpathy-Cramer, et~al.
+\newblock 3d slicer as an image computing platform for the quantitative imaging
+  network.
+\newblock {\em Magnetic Resonance Imaging}, 30(9):1323--1341, 2012.
+
+\bibitem{yu2022external}
+Alice~C Yu, Bahram Mohajer, and John Eng.
+\newblock External validation of deep learning algorithms for radiologic
+  diagnosis: a systematic review.
+\newblock {\em Radiology: Artificial Intelligence}, 4(3):e210064, 2022.
+
+\bibitem{guan2021domain}
+Hao Guan and Mingxia Liu.
+\newblock Domain adaptation for medical image analysis: a survey.
+\newblock {\em IEEE Transactions on Biomedical Engineering}, 69(3):1173--1185,
+  2021.
+
+\bibitem{guo2026impact}
+Brian Guo, Darui Lu, Gregory Szumel, Rongze Gui, Pengyu Li, Tingyu Wang,
+  Nicholas Konz, and Maciej~A Mazurowski.
+\newblock The impact of scanner domain shift on deep learning performance in
+  medical imaging: an experimental study.
+\newblock {\em International Journal of Computer Assisted Radiology and
+  Surgery}, pages 1--11, 2026.
+
+\bibitem{boussot2025konfai}
+Valentin Boussot and Jean-Louis Dillenseger.
+\newblock Konfai: A modular and fully configurable framework for deep learning
+  in medical imaging.
+\newblock {\em arXiv preprint arXiv:2508.09823}, 2025.
+
+\end{thebibliography}

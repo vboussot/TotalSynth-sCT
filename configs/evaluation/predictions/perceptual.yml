@@ -1,0 +1,56 @@
+# SAM: the calibrated d_SAM between the sCT and the CT (x100 in the tables), one 512x512 tile per axial slice.
+# Reg: the IMPACT distance between the sCT and its source image, in the features of a frozen segmentation
+# encoder on 128^3 patches: TotalSegmentator 3 mm for a CBCT source, MRSeg for an MRI source.
+# Neither is restricted to the body mask.
+# Filled in by scripts/evaluate.py: source image, encoder, prepared dataset, predictions folder, patient list
+# and run name.
+Evaluator:
+  metrics:
+    sCT:
+      targets_criterions:
+        CT:
+          criterions_loader:
+            totalsynth.metrics:SAM_Perceptual:
+              train: false
+        $source:
+          criterions_loader:
+            IMPACTReg:
+              name: Reg
+              model_name: $encoder
+              shape: [128, 128, 128]
+              in_channels: 1
+              loss: torch:nn:MSELoss
+              weights: $weights
+              reduction: mean
+  Dataset:
+    groups_src:
+      CT:
+        groups_dest:
+          CT:
+            transforms:
+              TensorCast:
+                dtype: float32
+                inverse: true
+              Statistics: {}
+      ${source}_IMPACT:
+        groups_dest:
+          $source:
+            transforms:
+              TensorCast:
+                dtype: float32
+                inverse: true
+              Statistics: {}
+      sCT:
+        groups_dest:
+          sCT:
+            transforms:
+              TensorCast:
+                dtype: float32
+                inverse: true
+              Statistics: {}
+    subset: $subset
+    dataset_filenames:
+    - $dataset:a:mha
+    - $predictions:i:mha
+    validation: None
+  train_name: $name

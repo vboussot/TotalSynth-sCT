@@ -1,0 +1,23 @@
+# Mean, over the volume, of the variance (HU^2) of the 15 predictions of an ensemble (Uncertainty.mha, written
+# by scripts/predict.py).
+# Filled in by scripts/evaluate.py: prepared dataset, predictions folder, patient list and run name.
+Evaluator:
+  metrics:
+    Uncertainty:
+      targets_criterions:
+        None:
+          criterions_loader:
+            Mean:
+              name: Uncertainty
+  Dataset:
+    groups_src:
+      Uncertainty:
+        groups_dest:
+          Uncertainty:
+            transforms: None
+    subset: $subset
+    dataset_filenames:
+    - $dataset:a:mha
+    - $predictions:i:mha
+    validation: None
+  train_name: $name

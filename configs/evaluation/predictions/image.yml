@@ -1,0 +1,36 @@
+# MAE, PSNR and SSIM inside the body mask, with the dynamic range of each image pair.
+# Filled in by scripts/evaluate.py: prepared dataset, predictions folder, patient list and run name.
+Evaluator:
+  metrics:
+    sCT:
+      targets_criterions:
+        CT;MASK:
+          criterions_loader:
+            MAE:
+              reduction: mean
+            SSIM:
+              dynamic_range: None
+            PSNR:
+              dynamic_range: None
+  Dataset:
+    groups_src:
+      MASK:
+        groups_dest:
+          MASK:
+            transforms: None
+      CT:
+        groups_dest:
+          CT:
+            transforms:
+              Statistics: {}
+      sCT:
+        groups_dest:
+          sCT:
+            transforms:
+              Statistics: {}
+    subset: $subset
+    dataset_filenames:
+    - $dataset:a:mha
+    - $predictions:i:mha
+    validation: None
+  train_name: $name

@@ -1,0 +1,26 @@
+\begin{table}[!ht]
+\centering
+\caption{Evaluation of the released unified MRI/CBCT-to-CT model by input domain and anatomical region. Values report mean $\pm$ standard deviation.}
+\label{tab:unified_mr_cbct_release_cv_metrics}
+\scriptsize
+\begin{tabular}{@{}lccccccc@{}}
+\toprule
+Region & MAE & PSNR & SSIM & Dice & SAM & Reg & Uncertainty \\
+\midrule
+MRI-to-CT/AB & \mstd{59.64}{9.56} & \mstd{30.04}{1.48} & \mstd{0.909}{0.023} & \mstd{0.591}{0.066} & \mstd{27.362}{4.014} & \mstd{0.526}{0.140} & \mstd{1451.52}{614.79} \\
+MRI-to-CT/HN & \mstd{80.34}{12.50} & \mstd{28.39}{1.34} & \mstd{0.926}{0.029} & \mstd{0.641}{0.106} & \mstd{13.378}{2.122} & \mstd{0.423}{0.080} & \mstd{1181.19}{467.90} \\
+MRI-to-CT/TH & \mstd{58.00}{11.26} & \mstd{31.19}{1.88} & \mstd{0.940}{0.019} & \mstd{0.635}{0.054} & \mstd{21.851}{4.555} & \mstd{0.436}{0.087} & \mstd{673.25}{226.95} \\
+MRI-to-CT/brain & \mstd{80.76}{9.21} & \mstd{27.26}{0.99} & \mstd{0.913}{0.016} & \mstd{0.763}{0.108} & \mstd{13.355}{2.870} & \mstd{1.185}{0.132} & \mstd{2897.51}{530.13} \\
+MRI-to-CT/pelvis & \mstd{47.43}{8.03} & \mstd{31.35}{1.49} & \mstd{0.902}{0.025} & \mstd{0.771}{0.102} & \mstd{27.045}{3.892} & \mstd{0.579}{0.096} & \mstd{2171.19}{487.25} \\
+MRI-to-CT/CSIRO & \mstd{76.98}{10.54} & \mstd{27.55}{1.05} & \mstd{0.928}{0.016} & \mstd{0.775}{0.038} & \mstd{31.038}{4.174} & \mstd{0.274}{0.060} & \mstd{1303.97}{165.31} \\
+MRI-to-CT/overall & \mstd{67.68}{16.42} & \mstd{29.22}{2.18} & \mstd{0.920}{0.025} & \mstd{0.701}{0.112} & \mstd{22.190}{7.884} & \mstd{0.585}{0.324} & \mstd{1644.98}{871.03} \\
+\midrule
+CBCT-to-CT/AB & \mstd{56.79}{14.26} & \mstd{31.07}{2.40} & \mstd{0.927}{0.024} & \mstd{0.665}{0.084} & \mstd{18.896}{4.771} & \mstd{0.013}{0.004} & \mstd{582.34}{212.75} \\
+CBCT-to-CT/HN & \mstd{67.95}{15.63} & \mstd{29.86}{2.16} & \mstd{0.947}{0.021} & \mstd{0.707}{0.076} & \mstd{10.396}{1.583} & \mstd{0.012}{0.004} & \mstd{479.47}{162.48} \\
+CBCT-to-CT/TH & \mstd{58.41}{14.72} & \mstd{31.76}{2.56} & \mstd{0.926}{0.018} & \mstd{0.726}{0.061} & \mstd{17.755}{4.460} & \mstd{0.015}{0.004} & \mstd{648.19}{208.79} \\
+CBCT-to-CT/brain & \mstd{40.59}{6.22} & \mstd{33.51}{1.48} & \mstd{0.968}{0.007} & \mstd{0.907}{0.070} & \mstd{9.425}{2.031} & \mstd{0.028}{0.011} & \mstd{821.30}{268.82} \\
+CBCT-to-CT/pelvis & \mstd{34.57}{7.72} & \mstd{35.19}{2.48} & \mstd{0.925}{0.022} & \mstd{0.828}{0.081} & \mstd{22.728}{4.836} & \mstd{0.023}{0.008} & \mstd{829.13}{292.40} \\
+CBCT-to-CT/overall & \mstd{54.22}{17.54} & \mstd{31.89}{2.87} & \mstd{0.938}{0.025} & \mstd{0.752}{0.113} & \mstd{15.420}{6.138} & \mstd{0.017}{0.009} & \mstd{644.19}{260.67} \\
+\bottomrule
+\end{tabular}
+\end{table}
